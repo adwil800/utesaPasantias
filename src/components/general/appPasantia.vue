@@ -40,7 +40,15 @@ export default {
       this.mixinCurrentWidth < 850 ? this.isToggled = true : this.isToggled = false;
     }, 
 
-    
+    '$route' (){
+
+        //If sidebar is absolute collapse it on every route change
+        if(this.mixinCurrentWidth < 850){
+          this.isToggled = true;
+        }
+
+    }
+
   }
 
 }
@@ -81,8 +89,6 @@ export default {
         }
     }
   /*Sidebar styling*/
-
-
 
 
 

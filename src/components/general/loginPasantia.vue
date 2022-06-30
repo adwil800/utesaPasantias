@@ -10,21 +10,21 @@
         <div class="loginForm">
             
             <div class="inputGroup ">
-                <i class="inputGroupText fa-solid fa-hotel"></i>
-                <select name="" id="" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <i class="inputGroupAddon noRightRadius fa-solid fa-hotel"></i>
+                <select class="noLeftRadius" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
                     <option value="" selected>Selecciona tu recinto</option>
                     <option value="">Santiago</option>
                 </select>
             </div>
 
             <div class="inputGroup ">
-                    <i class="inputGroupText fa-solid fa-user"></i>
-                <input type="text" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <i class="inputGroupAddon noRightRadius fa-solid fa-user"></i>
+                <input type="text"  class="noLeftRadius" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
             </div>
 
             <div class="inputGroup ">
-                    <i class="inputGroupText fa-solid fa-lock"></i>
-                <input type="text" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <i class="inputGroupAddon noRightRadius fa-solid fa-lock"></i>
+                <input type="text"  class="noLeftRadius" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
             </div>
 
             <button class="Ubtn utesaBtn align-self-center" @click="login">ENTRAR</button>
@@ -36,6 +36,8 @@
 </template> 
 
 <script>
+
+
 export default {
     name: "loginPasantia",
     components:{
@@ -51,18 +53,6 @@ export default {
             this.$emit("login", {username: "user1", password:"user1"});
         },
 
-        inputGroupShading(e, shade = true){
-
-            const i = e.target.parentElement.querySelector("i");
-
-            if(shade){
-                  i.style.boxShadow = "0px 0px 5px 1px var(--color60)";
-            }else{
-                  i.style.boxShadow = "none";
-            }
-
-
-        },
 
 
     },
@@ -114,28 +104,7 @@ export default {
         margin-bottom: 20px;
     }
 
-    .inputGroup{
-        display: flex;
-    }
-    .inputGroup input, .inputGroup select{
-        
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
-    }
-    .inputGroupText{
-        transition: ease 0.3s;
-        display: flex;
-        align-items: center;
-        padding: 0.370rem 0.70rem;
-        font-size: 18px;
-        color: white;
-        white-space: nowrap;
-        background-color: var(--color60);
-        border: 1px solid var(--color60);
-        border-top-right-radius: 0 !important;
-        border-bottom-right-radius: 0 !important;
-        border-radius: 3px;
-    }
+    
 
     
 

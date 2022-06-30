@@ -14,7 +14,6 @@
 
 import loginPasantia from "@/components/general/loginPasantia.vue";
 import appPasantia from "@/components/general/appPasantia.vue";
-import router from "@/components/general/routing/routes";
 
 export default {
   name: 'App',
@@ -22,7 +21,6 @@ export default {
     loginPasantia,
     appPasantia
   },
-  mixins:[router],
   data(){
     return{
       isLogged: false,
@@ -35,7 +33,7 @@ export default {
         //Auth user
         console.log(credentials);
 
-        this.$router.push("/solicitud");
+        this.$router.push("/empleos");
         this.isLogged = true;
 
 
@@ -84,10 +82,11 @@ export default {
   /**GENERAL */
   :root{
     --color60: #009788;
-    --color60Hover: #028b7d;
+    --color60Hover: #037d71;
     --sidebarBg: #222D32;
     --sidebarActiveLink: #0D1214;
     --htmlBg: #E5E5E5;
+    --htmlBgHover: #afabab8c;
 
   }
 
@@ -130,7 +129,7 @@ export default {
     padding-left: 5px;
   }
   .bold{
-      font-weight: bold;
+      font-weight: bold !important;
   }
 
   .Ubtn{
@@ -173,5 +172,69 @@ export default {
     display:none;
   }
 
+  .utesaForm{
+      box-shadow:  0px 0px 5px gray;
+      border-radius: 10px;
+      background-color: white;
+      margin-bottom: 30px;
+      padding: 30px  30px 30px;
+  }
 
+  .formHeader span{
+      font-size: 27px;
+      font-weight: 350;
+      margin-bottom: 15px;
+  }
+  
+  @media only screen and (max-width: 576px) {
+      
+    .formHeader span{
+        font-size: 23px;
+    }
+
+  }
+  
+    .compHeader{
+        display: flex;
+        padding: 15px;
+        background-color: white;
+        margin-bottom: 30px; 
+    }
+    .compHeader i{
+        font-size: 40px;
+        align-self: center;
+    }
+    .compHeader span{
+        font-size: 30px;
+        margin-left: 40px;
+    }
+
+
+
+    .inputGroup{
+        display: flex;
+    }
+    .noLeftRadius{
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+    }
+    .noRightRadius{
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+    .inputGroup button{
+      height: 38px !important;
+    }
+    .inputGroupAddon{
+        transition: ease 0.3s;
+        display: flex;
+        align-items: center;
+        padding: 0.370rem 0.70rem;
+        font-size: 18px;
+        color: white;
+        white-space: nowrap;
+        background-color: var(--color60);
+        border: 1px solid var(--color60);
+        border-radius: 3px;
+    }
 </style>

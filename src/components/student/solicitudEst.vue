@@ -14,66 +14,9 @@
             </div>
 
             <!--Comp body-->
-            <div class="">
+            <div>
                 
-
-
-                <!--Info requisitos-->
-                <div class="reqForm "> <!--Unnecessary-->
-
-                    <div class="req">
-
-                        <div class="reqIcon completedReq">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        
-                        <div class="reqInfo">
-                            <span class="bold">APROBAR TODAS LAS ASIGNATURAS HASTA EL 6TO CUATRIMESTRE INCLUIDO</span>
-
-                            <div class="reqStatus">
-                                Completado
-                            </div>
-                        </div>
-
-                    </div>
-                    
-                    <div class="req">
-
-                        <div class="reqIcon pendingReq">
-                            <i class="fa-solid fa-circle-xmark"></i>
-                        </div>
-                        
-                        <div class="reqInfo">
-                            <span class="bold">PAGO DERECHO A PASANTIA</span>
-
-                            <div class="reqStatus">
-                                Pendiente
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="req">
-
-                        <div class="reqIcon pendingReq">
-                            <i class="fa-solid fa-circle-xmark"></i>
-                        </div>
-                        
-                        <div class="reqInfo">
-                            <span class="bold">COPIA DE CÉDULA</span>
-
-                            <div class="reqStatus">
-                                Pendiente
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-
+ 
                 <!--Form solicitud-->
                 <div class="utesaForm ">
 
@@ -207,7 +150,7 @@
 
 <script>
 export default {
-    name: "solicitudPasantia",
+    name: "solicitudEst",
     data(){
         return{
 
@@ -239,126 +182,9 @@ export default {
 </script>
 
 <style scoped>
-
-    /**Info requisitos */
-    .reqForm{
-        margin-bottom: 30px;
-    }
-    .req{
-        display: flex;
-        margin-bottom: 10px;
-        min-height: 150px;
-        max-height: 180px;
-        width: 600px;
-        max-width: 90%;
-        min-width: 230px;
-        margin-left: auto;
-        margin-right: auto;
-        box-shadow:  0px 0px 5px gray;
-        border-radius: 10px;
-    }
-
-    .pendingReq{
-        background-color: lightcoral;
-    }
-    .completedReq{
-        background-color: var(--color60);
-    }
-
-    .reqIcon{
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-        width: 50%;
-        max-width: 140px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .reqIcon i{
-        font-size: 60px;
-        color: white;
-    }
-
-    .reqInfo{
-        padding-left: 15px;
-        padding-right: 15px;
-        background-color: white;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-
-
-    }
-    
-    .reqStatus{
-        font-size: 20px;
-    }
-
-
-    
-    @media only screen and (max-width: 576px) {
-        
-        .reqIcon{
-            min-width: 80px;
-            max-width: 80px;
-        }
-        .reqIcon i{
-            font-size: 50px;
-        }
-    }
-
-    /**Info requisitos */
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    .compHeader{
-        display: flex;
-        padding: 15px;
-        background-color: white;
-        margin-bottom: 30px; 
-    }
-    .compHeader i{
-        font-size: 40px;
-        align-self: center;
-    }
-    .compHeader span{
-        font-size: 30px;
-        margin-left: 40px;
-    }
     /**Form */
-    .utesaForm{
-        box-shadow:  0px 0px 5px gray;
-        border-radius: 10px;
-        background-color: white;
-        margin-bottom: 30px;
-        padding: 30px  30px 30px;
-    }
     
-    .formHeader span{
-        font-size: 27px;
-        font-weight: 350;
-        margin-bottom: 15px;
-    }
  
    
 

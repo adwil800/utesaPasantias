@@ -54,10 +54,14 @@ import '@adwil800/vue-sidebar-menu/dist/vue-sidebar-menu.css'
             title: 'Solicitar pasantia',
             icon: 'fa fa-hotel'
           },
-        
+          {
+            href: '/empleos',
+            title: 'Bolsa empleos',
+            icon: 'fa fa-key'
+          },
           {
             title: 'Charts',
-            icon: 'fa fa-home',
+            icon: 'fa fa-',
             child: [
               {
                 href: '/login',

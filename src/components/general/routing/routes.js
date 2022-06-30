@@ -4,17 +4,18 @@ import { createWebHistory, createRouter } from "vue-router";
 
 import notFound from "@/components/general/utilities/notFound";
 import loginPasantia from "@/components/general/loginPasantia";
-import solicitudPasantia from "@/components/student/solicitudPasantia";
-
-const home = `<template>asdp</template>`;
+import solicitudEst from "@/components/student/solicitudEst";
+import bolsaEmpEst from "@/components/student/bolsaEmpEst";
+import homePasantia from "@/components/general/homePasantia";
 
 const routes = [
-    { path: '/', name: "home", component: home },
+    { path: '/', name: "home", component: homePasantia },
     { path: '/login', name: "login", component: loginPasantia },
-    { path: '/solicitud', name: "solicitud", component: solicitudPasantia },
+    { path: '/solicitud', name: "solicitud", component: solicitudEst },
+    { path: '/empleos', name: "empleos", component: bolsaEmpEst },
     {path: "/:catchAll(.*)", name: "Not found", component: notFound},
     
-  ]
+  ];
 
 
 const router = createRouter({

@@ -13,7 +13,7 @@
               </div>
 
               <div class="postToggler ">
-                  <img src="@/assets/logo.gif" alt="Logo utesa">
+                  <img src="@/assets/logo.gif" alt="Logo utesa" @click="goHome">
                   <span class="overflowDisplay">UNIVERSIDAD TECNOLÓGICA DE SANTIAGO - UTESA  ( SEDE - SANTIAGO )</span>
               </div>
 
@@ -29,9 +29,12 @@ export default {
   methods:{
     emitToggle(){
       this.$emit("toggleSidebar");
+    },
+    goHome(){
+      this.$router.push("/");
     }
   },
-  emits:["emitToggle"],
+  emits:["toggleSidebar"],
 }
 </script>
 
@@ -79,10 +82,17 @@ export default {
       background-color: #00796E;
     }
     .postToggler{
-      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      
     }
     .postToggler img{
       width: 58px;
+      cursor: pointer;
+      transition: ease 0.3s;
+    }
+    .postToggler img:hover{
+      opacity: 0.8;
     }
 
 
@@ -96,18 +106,15 @@ export default {
 
     @media only screen and (max-width: 576px) {
         
-      .preToggler{
-        width: fit-content;
-        padding-left: 10px;
-        padding-right: 10px;
-        white-space: nowrap;
-      }
               
       @media (hover: none) {
-         .toggler i:hover { background-color: inherit; }
+        .toggler i:hover { background-color: inherit; }
       }
       .toggler i:active{
         background-color: #00796E;
+      }
+      .postToggler img:active{
+        opacity: 0.6;
       }
 
     }
