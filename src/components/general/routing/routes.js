@@ -5,16 +5,25 @@ import { createWebHistory, createRouter } from "vue-router";
 import notFound from "@/components/general/utilities/notFound";
 import loginPasantia from "@/components/general/loginPasantia";
 import solicitudEst from "@/components/student/solicitudEst";
-import bolsaEmpEst from "@/components/student/bolsaEmpEst";
 import homePasantia from "@/components/general/homePasantia";
 
+//Admin
+import bolsaEmpAdmin from "@/components/admin/bolsaEmpAdmin";
+import solicitudAdmin from "@/components/admin/solicitudAdmin";
+
 const routes = [
-    { path: '/', name: "home", component: homePasantia },
+    //General
     { path: '/login', name: "login", component: loginPasantia },
-    { path: '/solicitud', name: "solicitud", component: solicitudEst },
-    { path: '/empleos', name: "empleos", component: bolsaEmpEst },
     {path: "/:catchAll(.*)", name: "Not found", component: notFound},
-    
+
+    //Student
+    { path: '/', name: "home", component: homePasantia },
+    { path: '/solicitud', name: "solicitud", component: solicitudEst },
+
+    //Admin
+    { path: '/admin/empleos', name: "empleosAdmin", component: bolsaEmpAdmin },
+    { path: '/admin/solicitud', name: "solicitudAdmin", component: solicitudAdmin },
+
   ];
 
 

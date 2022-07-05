@@ -33,7 +33,7 @@ export default {
         //Auth user
         console.log(credentials);
 
-        this.$router.push("/empleos");
+        this.$router.push("/");
         this.isLogged = true;
 
 
@@ -237,4 +237,66 @@ export default {
         border: 1px solid var(--color60);
         border-radius: 3px;
     }
+
+
+
+
+
+
+
+
+
+
+    
+/**TRANSITION animation */
+.bounce-enter-active {
+  animation: bounce-in 0.3s;
+  overflow: hidden;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.3s reverse;
+  overflow: hidden;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media only screen and (max-width: 576px) {
+            
+    .bounce-enter-active {
+    animation: bounce-in 0.5s; 
+    }
+    .bounce-leave-active {
+    animation: bounce-in 0.5s reverse; 
+    }
+    
+    @keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.25);
+    }
+    100% {
+        transform: scale(1);
+    }
+    }
+
+}
+/**TRANSITION animation */
+
+a{
+  text-decoration: none;
+}
+
+a:hover, a:active{
+  text-decoration: underline;
+}
+
+
 </style>

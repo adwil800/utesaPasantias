@@ -18,7 +18,7 @@
                 
                 
                 <!--Info general-->
-                <div class="utesaForm">
+                <div class="utesaForm hidden">
 
                     <div class="formHeader ">
                         <span>Proceso de pasantia</span>
@@ -101,18 +101,39 @@
 
                     </div>
 
-                    <button class="Ubtn utesaBtn">Aplicar a la bolsa de empleos</button>
-                    <br>
-                    <br>
                     <button class="Ubtn utesaBtn">Solicitar pasantía</button>
 
+                </div>
+
+
+
+
+
+                <!--Request is being processed-->
+                <div class="utesaForm ">
+
+                    
+                    <div class="formHeader ">
+                        <span>Proceso de pasantia</span>
+                    </div>
+                
+                    <div class="">
+
+                        <p>
+                            Tu solicitud está siendo procesada por nuestro equipo, se te noficará una vez haya 
+                            sido completada. 
+                        </p>
+                        <p>
+                            Ten en cuenta que has aplicado a la <a href="#">bolsa de empleos</a>, se te notificará
+                            una vez hayamos encontrado una empresa compatible con tus habilidades.
+                        </p>
+
+                    </div>
 
                 </div>
+
+
                     
-               
-
-
-             
                 
             </div>
                 
@@ -181,50 +202,6 @@ export default {
 </script>
 
 <style scoped>
-/**TRANSITION animation */
-.bounce-enter-active {
-  animation: bounce-in 0.3s;
-  overflow: hidden;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.3s reverse;
-  overflow: hidden;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@media only screen and (max-width: 576px) {
-            
-    .bounce-enter-active {
-    animation: bounce-in 0.5s;
-    overflow: hidden;
-    }
-    .bounce-leave-active {
-    animation: bounce-in 0.5s reverse;
-    overflow: hidden;
-    }
-    
-    @keyframes bounce-in {
-    0% {
-        transform: scale(0);
-    }
-    50% {
-        transform: scale(1.25);
-    }
-    100% {
-        transform: scale(1);
-    }
-    }
-
-}
-/**TRANSITION animation */
-
  
     .inlineFlex{
       display: flex;

@@ -50,26 +50,26 @@ import '@adwil800/vue-sidebar-menu/dist/vue-sidebar-menu.css'
             icon: 'fa fa-user'
           },
           {
+            href: '/',
+            title: 'Home',
+            icon: 'fa fa-house'
+          },
+          {
             href: '/solicitud',
             title: 'Solicitar pasantia',
             icon: 'fa fa-hotel'
           },
           {
-            href: '/empleos',
-            title: 'Bolsa empleos',
-            icon: 'fa fa-key'
-          },
-          {
-            title: 'Charts',
-            icon: 'fa fa-',
+            title: 'Admin',
+            icon: 'fa fa-admin',
             child: [
               {
-                href: '/login',
-                title: 'Login?'
+                href: '/admin/solicitud',
+                title: 'Solicitudes pasantia'
               },
               {
-                href: '/loginxc',
-                title: 'Login?'
+                href: '/admin/empleos',
+                title: 'Bolsa empleos',
               }
             ]
           }
