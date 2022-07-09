@@ -5,7 +5,8 @@
           <div class="navbarGrid">
 
               <div class="preToggler"> 
-                  Locky - 1 16 1609
+                  Locky - 1 16 1609 &nbsp;
+                  <i class="fa-solid fa-right-from-bracket logout" @click="logout"></i>
               </div>
 
               <div class="toggler">
@@ -24,14 +25,23 @@
 </template>
 
 <script>
+import {useUserStore} from "@/stores/userStore";
 export default {
   name: "navbarPasantia",
+  data(){
+    return{
+      userStore: useUserStore(),
+    }
+  },
   methods:{
     emitToggle(){
       this.$emit("toggleSidebar");
     },
     goHome(){
       this.$router.push("/");
+    },
+    logout(){
+      this.$router.push("/logout");
     }
   },
   emits:["toggleSidebar"],
@@ -39,6 +49,16 @@ export default {
 </script>
 
 <style scoped>
+
+    .logout{
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .logout:hover{
+      color: lightcoral
+    }
 
 
     .sidebarNavbar{

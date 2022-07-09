@@ -45,11 +45,6 @@ import '@adwil800/vue-sidebar-menu/dist/vue-sidebar-menu.css'
         menu: [
 
           {
-            href: '/logout',
-            title: 'Logout',
-            icon: 'fa fa-user'
-          },
-          {
             href: '/',
             title: 'Home',
             icon: 'fa fa-house'

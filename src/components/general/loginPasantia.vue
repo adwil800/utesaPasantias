@@ -8,23 +8,23 @@
 
 
         <div class="loginForm">
-            
+            <h1>{{userStore.$state.isLogged}}</h1>
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-hotel"></i>
-                <select class="noLeftRadius" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
-                    <option value="" selected>Selecciona tu recinto</option>
-                    <option value="">Santiago</option>
+                <select class="noLeftRadius" v-model="campusId" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                    <option value="" disabled selected>Selecciona tu recinto</option>
+                    <option value="2">Santiago</option>
                 </select>
             </div>
 
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-user"></i>
-                <input type="text"  class="noLeftRadius" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <input type="text"  class="noLeftRadius" v-model="username" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
             </div>
 
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-lock"></i>
-                <input type="text"  class="noLeftRadius" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <input type="text"  class="noLeftRadius" v-model="psw" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
             </div>
 
             <button class="Ubtn utesaBtn align-self-center" @click="login">ENTRAR</button>
@@ -37,7 +37,7 @@
 
 <script>
 
-
+import {useUserStore} from "@/stores/userStore";
 export default {
     name: "loginPasantia",
     components:{
@@ -45,18 +45,37 @@ export default {
     },
     data(){
         return{
-
+            userStore: useUserStore(),
+            username: "1161609",
+            psw: "1161609",
+            campusId: "2",
         }
     },
     methods:{
-        login(){
-            this.$emit("login", {username: "user1", password:"user1"});
+        async login(){
+
+
+            if(this.username.toString().trim().length < 1 || this.psw.toString().trim().length < 1 || this.campusId.toString().trim().length < 1) return;
+            
+            const body = {username: this.username, psw: this.psw, campusId: this.campusId};
+            const res = await this.axios.post("auth/login", body);
+            
+            if(!res.data.success){
+                
+                //Error message
+                console.log(res.data.data);
+            }else{
+                //console.log("Welcome "+res.data.data)
+                //Set current user and allow conditional rendering
+                this.userStore.getLoggedUser();  
+                this.$router.push("/");
+            }
+
+
         },
-
-
+      
 
     },
-    emits:["login"],
 
 }
 

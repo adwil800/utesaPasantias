@@ -23,7 +23,7 @@ const routes = [
     //Admin
     { path: '/admin/empleos', name: "empleosAdmin", component: bolsaEmpAdmin },
     { path: '/admin/solicitud', name: "solicitudAdmin", component: solicitudAdmin },
-
+   
   ];
 
 
@@ -33,24 +33,7 @@ const router = createRouter({
 });
 
 export default router;
-/**router.beforeEach((to, from) => { //next: callback or any third argument
 
-    //Verify authentication
-    const toPath = to.path.replace("/", "");
-    const fromPath = from.path.replace("/", "");
-        console.log(fromPath + " to " + toPath)
-    if(toPath.toLowerCase() !== "login"){
-        console.log("test auth")
-    }else{
-      //Sign out
-    }
-
-    //Log something
-    //Return false: Cancel routing
-    //Return {name: routeName}: Reroute
-
-  })
- */
 
 
 

@@ -1,12 +1,11 @@
 <template>
 
-  <div v-if="isLogged">
+  <div v-if="userStore.$state.isLogged">
     <appPasantia />
   </div>
   <div v-else >
-    <loginPasantia @login="authenticateUser"/>
+    <loginPasantia/>
   </div>
-
 
 </template>
 
@@ -15,6 +14,8 @@
 import loginPasantia from "@/components/general/loginPasantia.vue";
 import appPasantia from "@/components/general/appPasantia.vue";
 
+
+import {useUserStore} from "@/stores/userStore";
 export default {
   name: 'App',
   components: {
@@ -23,56 +24,19 @@ export default {
   },
   data(){
     return{
-      isLogged: false,
+      userStore: useUserStore(),
     }
   },
   methods:{
 
-    authenticateUser(credentials){
-
-        //Auth user
-        console.log(credentials);
-
-        this.$router.push("/");
-        this.isLogged = true;
-
-
-
-    }, 
-    logout(){
-        this.isLogged = false;
-    }
+   
 
   }, 
   watch:{
-    '$route' (to, from){
-        //Check for login and logout
-        const toPath = to.path.replace("/", "");
-        const fromPath = from.path.replace("/", "");
-
-        switch(toPath.toLowerCase()){
-          case "logout": 
-              this.logout();
-              this.$router.push("login");
-            break;
-
-          case "login":
-              if(this.isLogged){
-                this.$router.push(fromPath);
-                //Prevent navigation
-              }
-            break;
-          
-          default: 
-              if(!this.isLogged){
-                this.$router.push("login")
-              }
-            break;
-        }
-    }
-  },
+  }
 
 }
+
 
 
 </script>

@@ -419,7 +419,7 @@ export default {
 
         showSubrow(){
             this.isShowSubrow = !this.isShowSubrow;
-            console.log(this.isShowSubrow)
+            //console.log(this.isShowSubrow)
         },
 
         parentWorm(el, tag){
