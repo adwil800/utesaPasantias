@@ -27,27 +27,31 @@ const app = createApp(App);
       app.mixin(IGShading)
       app.mount('#app');
 
-
-
 //Navigation guards
+
 
 router.beforeResolve( async (to, from) => {
 
+   
     const userStore = useUserStore();
+
     //Update current login state
-          userStore.getLoggedUser();
-
-    PINIA DOESNT WORK WITH NAVIGATION GUARDS
-
-    console.log("FROM: ", from.path)
+    const isLogged = await userStore.isUserLogged();
+          
+    if(isLogged) userStore.setLoggedUser();
+    else{
+        userStore.$state.isLogged = false;
+        userStore.$state.userData = {};
+    }
+    
+    console.log("Is logged: ", isLogged, " from path: ", from.path, " to path: ", to.path)
 
     //   '/solicitud' '/admin/empleos' '/admin/solicitud'
   
         switch(to.path){
             //DONE
             case "/": { 
-                console.log("HOME: ", userStore.$state.isLogged);
-                if(!userStore.$state.isLogged){
+                if(!isLogged){
                     return "/login";
                 } 
 
@@ -56,7 +60,23 @@ router.beforeResolve( async (to, from) => {
             
 
             case "/solicitud": {
-                if(!userStore.$state.isLogged){
+                if(!isLogged){
+                    return "/login";
+                }
+
+                break;
+            }
+            
+            case "/admin/solicitud": {
+                if(!isLogged){
+                    return "/login";
+                }
+
+                break;
+            }
+
+            case "/admin/empleos": {
+                if(!isLogged){
                     return "/login";
                 }
 
@@ -67,34 +87,16 @@ router.beforeResolve( async (to, from) => {
             //DONE
             case "/login": {
 
-                if(userStore.$state.isLogged){
-                    return false;
+                if(isLogged){
+                    console.log("tried to go to login")
+                    return "/";
                 }
 
                 break;
             }
-            //DONE
-            case "/logout": {
+           
 
-
-                if(userStore.$state.isLogged){
-
-                    const res = await axios.get("auth/logout");
-                    //User logged out
-                    if(res.data.success){
-                        userStore.$state.userData = {};
-                        userStore.$state.isLogged = false;
-                    } 
-
-                    return "/login";
-
-                }else{
-                    return "/login";
-                }
-
-            }
-
-            //DONE
+            //DONE - WHICHEVER ROUTE IT IS IT WILL SEND ME BACK HOME, 404 SITE NOT WORKING
             default: {
                     return "/";
             }

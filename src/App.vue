@@ -27,13 +27,6 @@ export default {
       userStore: useUserStore(),
     }
   },
-  methods:{
-
-   
-
-  }, 
-  watch:{
-  }
 
 }
 

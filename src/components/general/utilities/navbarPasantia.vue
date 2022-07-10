@@ -5,7 +5,7 @@
           <div class="navbarGrid">
 
               <div class="preToggler"> 
-                  Locky - 1 16 1609 &nbsp;
+                  {{formattedUserInfo}} &nbsp;
                   <i class="fa-solid fa-right-from-bracket logout" @click="logout"></i>
               </div>
 
@@ -41,7 +41,18 @@ export default {
       this.$router.push("/");
     },
     logout(){
-      this.$router.push("/logout");
+      
+      this.userStore.logoutUser();
+
+    }
+  },
+  computed:{
+    formattedUserInfo(){
+      const name = this.userStore.$state.userData.nombre.split(" ")[0]; 
+      const lastname = this.userStore.$state.userData.apellido.split(" ")[0]; 
+      const username = this.userStore.$state.userData.usuario;
+      
+      return name + " " + lastname + " " + username; 
     }
   },
   emits:["toggleSidebar"],

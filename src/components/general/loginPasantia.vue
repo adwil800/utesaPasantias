@@ -8,7 +8,6 @@
 
 
         <div class="loginForm">
-            <h1>{{userStore.$state.isLogged}}</h1>
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-hotel"></i>
                 <select class="noLeftRadius" v-model="campusId" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
@@ -58,16 +57,18 @@ export default {
             if(this.username.toString().trim().length < 1 || this.psw.toString().trim().length < 1 || this.campusId.toString().trim().length < 1) return;
             
             const body = {username: this.username, psw: this.psw, campusId: this.campusId};
+            
             const res = await this.axios.post("auth/login", body);
+
             
             if(!res.data.success){
-                
                 //Error message
-                console.log(res.data.data);
+                alert(res.data.data)
+              
             }else{
                 //console.log("Welcome "+res.data.data)
                 //Set current user and allow conditional rendering
-                this.userStore.getLoggedUser();  
+                this.userStore.setLoggedUser();  
                 this.$router.push("/");
             }
 
