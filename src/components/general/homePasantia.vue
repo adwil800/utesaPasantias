@@ -18,7 +18,7 @@
                 
                 
                 <!--Info general-->
-                <div class="utesaForm hidden">
+                <div class="utesaForm ">
 
                     <div class="formHeader ">
                         <span>Proceso de pasantia</span>
@@ -81,27 +81,10 @@
 
                         </div>    
 
-                        <div class="req">
-
-                            <div class="reqIcon pendingReq">
-                                <i class="fa-solid fa-circle-xmark"></i>
-                                    <i class="reqMoreInfo fa-solid fa-circle-exclamation" @click="openModal"></i>
-                            </div>
-                            
-                            <div class="reqInfo">
-                                <span class="bold">COPIA DE CÉDULA</span>
-
-                                <div class="reqStatus">
-                                    Pendiente
-                                </div>
-                            </div>
-
-                        </div>
-
+                       
 
                     </div>
 
-                    <button class="Ubtn utesaBtn">Solicitar pasantía</button>
 
                 </div>
 
@@ -147,18 +130,17 @@
         
         <template v-slot:header>
                 <div class="formHeader ">
-                    <span>¿Como completar el requisito copia de cédula?</span>
+                    <span>¿Como completar el requisito pago derecho a pasantía?</span>
                 </div>
         </template>
         <template v-slot:body>
 
                 <ol>
                     <li>
-                        <a href="#">Adjunta</a> un archivo
+                        Introduce el número de recibo al momento de solicitar tu pasantía
                     </li>
                     <li>
-                        Haz una entrega personal en el departamento de pasantías en 
-                        el centro estudiantil
+                        Haz un pago a tesorería de forma presencial
                     </li>
                 
                 </ol>
@@ -177,6 +159,8 @@
     import modalPasantia from "@/components/general/utilities/modalPasantia.vue"
 
     import modalHandler from "@/mixins/modalHandler";
+
+
 export default {
     name: "homePasantia",
     components:{
@@ -185,7 +169,6 @@ export default {
     mixins: [modalHandler],
     data(){
         return{
-
         }
     },
     methods: {

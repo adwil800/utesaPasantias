@@ -265,6 +265,7 @@
     import modalPasantia from "@/components/general/utilities/modalPasantia.vue"
     import modalHandler from "@/mixins/modalHandler";
 
+
 export default {  
     name: "solicitudEst",
     components: {
@@ -276,9 +277,10 @@ export default {
 
             isBEmp: false,
             currentStage: 1,
+            
+            studentInformation: "",
 
-
-
+        //Guardar temporalmente la información de solicitud, numrecibo 0000000 o null
 
 
             //BEmp skills
@@ -347,12 +349,19 @@ export default {
         },
         removeSkill(skill){
             this.skills.splice(this.skills.indexOf(skill), 1);
-        }
+        },
 
+        async setStudentInformation(){
+            this.studentInformation = await this.axios.get("/pasantia/getstudent");
+            this.studentInformation = this.studentInformation.data.data;
+            console.log(this.studentInformation)
+        }
+    
     },
     mounted(){
         this.alignLabels(".utesaForm .studentInfo label");
         this.alignLabels(".utesaForm .companyInfo label");
+        this.setStudentInformation();
     },
     updated(){
         this.alignLabels(".utesaForm .studentInfo label");

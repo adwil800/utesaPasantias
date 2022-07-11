@@ -18,7 +18,7 @@ pinia.use(({ store }) => {
 import {useUserStore} from "./stores/userStore";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:5500/';
+axios.defaults.baseURL = 'http://localhost:5500/api';
 
 const app = createApp(App);
       app.use(pinia);
@@ -98,6 +98,7 @@ router.beforeResolve( async (to, from) => {
 
             //DONE - WHICHEVER ROUTE IT IS IT WILL SEND ME BACK HOME, 404 SITE NOT WORKING
             default: {
+                console.log("rip")
                     return "/";
             }
         }
