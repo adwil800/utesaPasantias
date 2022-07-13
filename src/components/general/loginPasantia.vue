@@ -8,6 +8,9 @@
 
 
         <div class="loginForm">
+
+            <span class="sessionInfo">{{sessionStore.$state.sessionStatus}}</span>
+
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-hotel"></i>
                 <select class="noLeftRadius" v-model="campusId" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
@@ -36,7 +39,7 @@
 
 <script>
 
-import {useUserStore} from "@/stores/userStore";
+import {useUserStore, useSessionStore} from "@/stores/userStore";
 export default {
     name: "loginPasantia",
     components:{
@@ -45,6 +48,7 @@ export default {
     data(){
         return{
             userStore: useUserStore(),
+            sessionStore: useSessionStore(),
             username: "1161609",
             psw: "1161609",
             campusId: "2",
@@ -58,12 +62,12 @@ export default {
             
             const body = {username: this.username, psw: this.psw, campusId: this.campusId};
             
-            const res = await this.axios.post("auth/login", body);
+            const res = await this.axiosPost("auth/login", body);
 
-            
-            if(!res.data.success){
+            this.sessionStore.$state.sessionStatus = "";
+            if(!res.success){
                 //Error message
-                alert(res.data.data)
+                alert(res.data)
               
             }else{
                 //console.log("Welcome "+res.data.data)
@@ -124,7 +128,13 @@ export default {
         margin-bottom: 20px;
     }
 
-    
+    .sessionInfo{
+        align-self: center;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        font-size: 18px;
+        font-weight: 500;
+    }
 
     
 

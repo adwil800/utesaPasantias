@@ -3,6 +3,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 //Mixins
 import IGShading from './mixins/IGShading';
+import axiosHandler from './mixins/axiosHandler';
 
 import App from './App.vue'
 import router from "./components/general/routing/routes";
@@ -22,9 +23,10 @@ axios.defaults.baseURL = 'http://localhost:5500/api';
 
 const app = createApp(App);
       app.use(pinia);
-      app.use(router)
-      app.use(VueAxios, axios)
-      app.mixin(IGShading)
+      app.use(router);
+      app.use(VueAxios, axios);
+      app.mixin(IGShading);
+      app.mixin(axiosHandler);
       app.mount('#app');
 
 //Navigation guards
@@ -33,6 +35,12 @@ const app = createApp(App);
 router.beforeResolve( async (to, from) => {
 
    
+    IM HERE, GOT TO CHECK FOR SESSION EXPIRATION WHILE GOING NAVIGATING WITH THE FOLLOWING CODE
+    if(res.data.sessionAlive === false){
+        this.sessionInfo.$state.sessionStatus = res.data.data;
+    }
+    ENDOFCODE
+
     const userStore = useUserStore();
 
     //Update current login state

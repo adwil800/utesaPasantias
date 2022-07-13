@@ -30,13 +30,12 @@
                             <div class="col-sm ">
                             
                                 <label for="">NOMBRE: </label>
-                                <span class="bold">LUIS GERMAN REYES PEÑA</span>
+                                <span class="bold">{{studentInformation.nombre +" "+studentInformation.apellido}}</span>
 
                             </div>
                             <div class="col-sm ">
-
                                 <label for="">CARRERA: </label>
-                                <span class="bold">ING. EN SISTEMAS COMPUTACIONALES</span>
+                                <span class="bold">{{studentInformation.carrera}}</span>
 
                             </div>
 
@@ -46,14 +45,14 @@
                             <div class="col-sm  ">
 
                                 <label for="">MATRICULA:</label>
-                                <span class="bold">2-17-2038</span>
+                                <span class="bold">{{studentInformation.matricula}}</span>
 
                             </div>
 
                             <div class="col-sm  flexCenter">
                     
                                 <label for="">TELEFONO:</label>
-                                <input type="text">
+                                <span class="bold">{{getStudentPhones}}</span>
                                 
                             </div>
                         </div>
@@ -61,7 +60,7 @@
                         <div class="flexCenter">
                             
                             <label for="">DIRECCIÓN:</label>
-                            <input type="text">
+                            <span class="bold">{{studentInformation.direccion + ", " + studentInformation.provincia}}</span>
                             
                         </div>
                     </div>
@@ -73,11 +72,11 @@
                         <span>TIPO DE PASANTÍA:</span>
 
                         <div class="flexCenter ">
-                            <input type="radio">
+                            <input type="radio" value="0" v-model="studentInformation.tipopasantia">
                             <label class="bold ml10"> TÉCNICO</label>
                         </div>
                         <div class="flexCenter">
-                            <input type="radio">
+                            <input type="radio" value="1" v-model="studentInformation.tipopasantia">
                             <label class="bold ml10"> PROFESIONAL</label>
                         </div>
                     </div>
@@ -89,8 +88,8 @@
 
                         <div class="formHeader">
                             <span>¿No tienes empresa?</span>
-                            <i class="fa-solid fa-circle-check isBEmp" v-if="isBEmp"></i>
-                            <i class="fa-solid fa-circle-xmark isNotBEmp" v-if="!isBEmp" ></i>
+                            <i class="fa-solid fa-circle-check isBEmp" v-if="studentInformation.bolsaempleos"></i>
+                            <i class="fa-solid fa-circle-xmark isNotBEmp" v-if="!studentInformation.bolsaempleos" ></i>
                         </div>
 
                             <span><a href="#" @click="openModal">Únete a la bolsa de empleos!</a></span>
@@ -103,22 +102,12 @@
                 </div>
 
                 <!--Form bolsa de empleos-->
-                <div class="utesaForm" v-if="currentStage === 2 && isBEmp">
+                <div class="utesaForm" v-if="currentStage === 2 && studentInformation.bolsaempleos">
 
 
                     <!--Overview-->
                     <div class="formHeader">
                         <span>Overview</span>
-                    </div>
-
-                    <div class="">
-
-                        <p>La bolsa de empleos es un sistema de emparejamiento donde se busca asignar
-                            empresas a nuestros pasantes de acuerdo a su área de desempeño.</p>
-                            
-                        <input type="checkbox" name="" id=""> <!--Toggle mySkills-->
-                        <label for="">&nbsp; Deseo ser parte de la bolsa de empleo</label>
-
                     </div>
 
 
@@ -143,7 +132,7 @@
                                     <select class="noRightRadius" v-model="currentSkill"
                                     @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
                                         <option value="" disabled selected> Selecciona </option>
-                                        <option v-for="skill in availableSkills" :key="skill.id" :value="skill.id">{{skill.name}}</option>
+                                        <option v-for="skill in availableSkills.data" :key="skill.skillId" :value="skill.skillId">{{skill.name}}</option>
                                     </select>
                                     <button class="Ubtn utesaBtn inputGroupAddon noLeftRadius" @click="addSkill">Agregar</button>
                                 </div>
@@ -153,8 +142,8 @@
                             <div class="col-12">
 
                                     <ul class="skillSet">
-                                        <li v-for="skill in skills" :key="skill" @dblclick="removeSkill(skill)">{{availableSkills[skill].name}}</li>
-                                        <li v-if="skills.length < 1">Lista vacía</li>
+                                        <li v-for="skill in studentSkills.data" :key="skill.skillId" @dblclick="removeSkill(skill.skillId)">{{availableSkills.data.find(x => x.skillId === skill.skillId).name}}</li>
+                                        <li v-if="studentSkills.length < 1">Lista vacía</li>
                                     </ul>
 
                             </div>
@@ -171,7 +160,7 @@
                 </div>
 
                 <!--Form datos de empresa-->
-                <div class="utesaForm" v-if="currentStage === 2 && !isBEmp">
+                <div class="utesaForm" v-if="currentStage === 2 && !studentInformation.bolsaempleos">
 
                     <div class="formHeader">
                         <span>Empresa</span>
@@ -246,7 +235,7 @@
               <p>Es un sistema de emparejamiento donde se busca asignar
                             empresas a nuestros pasantes de acuerdo a su área de desempeño.</p>
                             
-                    <input type="checkbox" class="form-check-input" v-model="isBEmp"> <!--Toggle mySkills-->
+                    <input type="checkbox" class="form-check-input" v-model="studentInformation.bolsaempleos" @change="updateStudentBemp"> <!--Toggle mySkills-->
                     <label for="">&nbsp; Deseo ser parte de la bolsa de empleo</label>
                 
         </template>
@@ -275,48 +264,21 @@ export default {
     data(){
         return{
 
-            isBEmp: false,
             currentStage: 1,
-            
             studentInformation: "",
-
-        //Guardar temporalmente la información de solicitud, numrecibo 0000000 o null
+            //Guardar temporalmente la información de solicitud, numrecibo 0000000 o null
 
 
             //BEmp skills
-            skills: [],
+            studentSkills: [],
             currentSkill: "",
 
             //Available skills on select
             availableSkills: [
                     {   
-                        id: "0",
-                        name: "Php",
-                    },
-                    {   
-                        id: "1",
-                        name: "Vue.js",
-                    },
-                    {   
-                        id: "2",
-                        name: "React.js",
-                    },
-                    {   
-                        id: "3",
-                        name: "Node.js",
-                    },
-                    {   
-                        id: "4",
-                        name: "Express.js",
-                    },
-                    {   
-                        id: "5",
-                        name: "React native",
-                    },
-                    {   
-                        id: "6",
-                        name: "Html",
-                    },
+                        skillId: "0",
+                        name: "No disponible",
+                    }
             ]
 
         }
@@ -334,34 +296,102 @@ export default {
         nextStage(){
 
             this.currentStage++;
+            //Update available skills given that the student has applied to Bemp
+            if(this.studentInformation.bolsaempleos){
+               this.loadSkills();
+            }
+
+        },
+        async loadSkills(){
+             //Get career skills
+                this.availableSkills = await this.axiosGet("/bemp/careerskills", {careerId: this.studentInformation.idcarrera});
+                if(!this.availableSkills.success){
+                    //console.log("The error goes here stored on data");
+                }
+
+                //Get student skills
+                this.studentSkills = await this.axiosGet("/bemp/studentskills");
+                if(!this.studentSkills.success){
+                    //console.log("The error goes here stored on data");
+                    this.studentSkills = []
+                }
 
         },
         prevStage(){
             this.currentStage--;
         },
-        addSkill(){
+        async addSkill(){
             //Check if valid
-            if(this.currentSkill.trim().length < 1) return;
+            if(this.currentSkill.toString().trim().length < 1) return;
             //Check if exists
-            if(this.skills.includes(this.currentSkill)) return;
+            const exists = await this.axiosGet("/bemp/studentskill", {skillId: this.currentSkill});
+            if(exists.success){
+                //console.log("Ya existe")
+                return;
+            }
             //Add
-            this.skills.push(this.currentSkill);
+            const added = await this.axiosPost("/bemp/studentskill", {skillId: this.currentSkill});
+            if(!added.success){
+                //console.log("Error")
+            }
+            this.currentSkill = "";
+            this.loadSkills();
         },
-        removeSkill(skill){
-            this.skills.splice(this.skills.indexOf(skill), 1);
+        async removeSkill(skill){
+            const exists = await this.axiosDelete("/bemp/studentskill", {skillId: skill});
+            if(!exists.success){
+                //console.log("Error")
+                return;
+            }
+
+            this.loadSkills();
         },
 
         async setStudentInformation(){
-            this.studentInformation = await this.axios.get("/pasantia/getstudent");
-            this.studentInformation = this.studentInformation.data.data;
-            console.log(this.studentInformation)
-        }
-    
+            this.studentInformation = await this.axiosGet("/pasantia/getstudent");
+            if(!this.studentInformation.success){
+                //console.log("The error goes here stored on data");
+            }
+            this.studentInformation = this.studentInformation.data;
+            //console.log(this.studentInformation)
+        },
+        async updateStudentBemp(){
+
+            const updated = await this.axiosPut("/pasantia/updatebemp", {isBemp: this.studentInformation.bolsaempleos})
+            if(updated.success){
+                //console.log("loading thingy, updated studentInformation.bolsaempleos successfuly")
+            }
+        },
+        
+        
     },
+    watch:{
+        'studentInformation.tipopasantia': async function (){
+            const updated = await this.axiosPut("/pasantia/updatetpasantia", {tipopasantia: this.studentInformation.tipopasantia})
+            if(updated.success){
+                //console.log("loading thingy, updated studentInformation.tipopasantia successfuly")
+            }
+        }
+    },  
+    computed: {
+        getStudentPhones(){
+            if(this.studentInformation.telefonos){
+            let numbers = "";
+            this.studentInformation.telefonos.forEach(e => {
+                numbers += e.telefono + " ";
+            });
+            return numbers;
+            }
+            return "";
+        }
+    },  
     mounted(){
+
+        this.setStudentInformation();
         this.alignLabels(".utesaForm .studentInfo label");
         this.alignLabels(".utesaForm .companyInfo label");
-        this.setStudentInformation();
+
+      
     },
     updated(){
         this.alignLabels(".utesaForm .studentInfo label");
