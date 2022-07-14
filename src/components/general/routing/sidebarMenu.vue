@@ -45,7 +45,7 @@ import '@adwil800/vue-sidebar-menu/dist/vue-sidebar-menu.css'
         menu: [
 
           {
-            href: '/',
+            href: '/my',
             title: 'Home',
             icon: 'fa fa-house'
           },
@@ -73,9 +73,6 @@ import '@adwil800/vue-sidebar-menu/dist/vue-sidebar-menu.css'
         ],
           
       }
-
-    },
-    methods:{
 
     },
    

@@ -11,11 +11,6 @@ export default{
         },
     
       }, 
-      watch:{
-    
-        
-        
-      },
       mounted () {    
     
         window.addEventListener('resize', this.onResize, { passive: true });

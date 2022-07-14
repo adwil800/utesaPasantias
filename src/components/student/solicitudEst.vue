@@ -57,12 +57,28 @@
                             </div>
                         </div>
 
-                        <div class="flexCenter">
+
+                        <div class="row">
+
+                            <div class="col-sm  flexCenter">
+                        
+                                <label for="">DIRECCIÓN:</label>
+                                <span class="bold">{{studentInformation.direccion + ", " + studentInformation.provincia}}</span>
                             
-                            <label for="">DIRECCIÓN:</label>
-                            <span class="bold">{{studentInformation.direccion + ", " + studentInformation.provincia}}</span>
+                            </div>
                             
+                            <div class="col-sm  ">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <a href="#" @click="openModal('receipt')"># RECIBO:</a>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" v-model="requestData.receiptNumber">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
 
                     <div class="lineThrough"></div>
@@ -92,7 +108,7 @@
                             <i class="fa-solid fa-circle-xmark isNotBEmp" v-if="!studentInformation.bolsaempleos" ></i>
                         </div>
 
-                            <span><a href="#" @click="openModal">Únete a la bolsa de empleos!</a></span>
+                            <span><a href="#" @click="openModal('bemp')">Únete a la bolsa de empleos!</a></span>
 
                     </div>
 
@@ -133,6 +149,7 @@
                                     @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
                                         <option value="" disabled selected> Selecciona </option>
                                         <option v-for="skill in availableSkills.data" :key="skill.skillId" :value="skill.skillId">{{skill.name}}</option>
+                                        <option v-if="availableSkills.length < 1" value = "" disabled>No value</option>
                                     </select>
                                     <button class="Ubtn utesaBtn inputGroupAddon noLeftRadius" @click="addSkill">Agregar</button>
                                 </div>
@@ -155,7 +172,7 @@
                     </div>
 
                     <button class="Ubtn utesaBtn" @click="prevStage">Atrás</button>
-                    <button class="Ubtn utesaBtn alignRight" @click="nextStage">Siguiente?</button>
+                    <button class="Ubtn utesaBtn alignRight" @click="submitRequest">Enviar solicitud</button>
 
                 </div>
 
@@ -172,13 +189,23 @@
                             <div class="col-sm flexCenter">
                                     
                                 <label for="">NOMBRE:</label>
-                                <input type="text">
+                                <input type="text" v-model="requestData.name" name="name">
 
                             </div>
                             <div class="col-sm flexCenter">
 
                                 <label for="">TIPO:</label>
-                                <input type="text">
+                                <select v-model="requestData.type" name="type" >
+                                    <option value="" disabled selected>Selecciona</option>
+                                    <option value="Industrial">Industrial</option>
+                                    <option value="De servicios">De servicios</option>
+                                    <option value="Comercio">Comercio</option>
+                                    <option value="Pública">Pública</option>
+                                    <option value="Privada">Privada</option>
+                                    <option value="Otras">Otras, especifique</option>
+                                </select>
+
+                                <input class="ml-5" type="text" name="otherType" v-if="requestData.type === 'Otras'" v-model="requestData.otherType">
 
                             </div>
 
@@ -188,14 +215,14 @@
                             <div class="col-sm  flexCenter">
 
                                 <label for="">TELEFONO:</label>
-                                <input type="text">
+                                <input type="text" v-model="requestData.phone" name="phone">
 
                             </div>
 
                             <div class="col-sm  flexCenter">
                     
                                 <label for="">DIRECCIÓN:</label>
-                                <input type="text">
+                                <input type="text" v-model="requestData.address" name="address">
                                 
                             </div>
                         </div>
@@ -203,14 +230,15 @@
                         <div class="col-sm-8">
                             
                                 <span for="">NOMBRE DEL ENCARGADO:</span>
-                                <input type="text">
+                                <input type="text" v-model="requestData.tutorName" name="tutorName">
                             
                             
                         </div>
                     </div>
 
                     <button class="Ubtn utesaBtn" @click="prevStage">Atrás</button>
-                    <button class="Ubtn utesaBtn alignRight" @click="nextStage">Siguiente?</button>
+                    <button class="Ubtn utesaBtn alignRight" @click="submitRequest" v-if="requestData.receiptNumber.length > 0">Enviar solicitud</button>
+                    <button class="Ubtn utesaBtn alignRight" @click="submitRequest" v-else>Guardar solicitud</button>
 
                 </div>
 
@@ -221,29 +249,53 @@
     </div>
 
 
-    
     <Transition name="bounce">
         <modalPasantia @closeModal="closeModal" v-if="isOpen">
         
         <template v-slot:header>
                 <div class="formHeader ">
-                    <span>¿Qué es la bolsa de empleos?</span>
+                    <div v-if="currentModalData === 'bemp'">
+                        <span>¿Qué es la bolsa de empleos?</span>
+                    </div>
+                    <div v-else-if="currentModalData === 'receipt'">
+                        <span>¿Qué es el número de recibo?</span>
+                    </div>
+
                 </div>
         </template>
         <template v-slot:body>
 
-              <p>Es un sistema de emparejamiento donde se busca asignar
+
+            <div v-if="currentModalData === 'bemp'">
+                <p>Es un sistema de emparejamiento donde se busca asignar
                             empresas a nuestros pasantes de acuerdo a su área de desempeño.</p>
                             
                     <input type="checkbox" class="form-check-input" v-model="studentInformation.bolsaempleos" @change="updateStudentBemp"> <!--Toggle mySkills-->
                     <label for="">&nbsp; Deseo ser parte de la bolsa de empleo</label>
-                
+            </div>
+
+            <div v-else-if="currentModalData === 'receipt'">
+
+                <p>Se refiere al numero del comprobante de pago de pasantías. </p>
+
+                <ol>
+                    <li>
+                        Introduce el número de recibo de pago de pasantía o
+                    </li>
+                    <li>
+                        Realiza el pago a tesorería en linea??
+                    </li>
+                </ol>
+
+            </div>
         </template>
 
         </modalPasantia>
     </Transition>
 
-
+    <Transition name="bounce">
+        <errorHandler v-if="showError" @removeError="toggleShowNotification" :message="errorMessage"/>
+    </Transition>
 
 
 </template>
@@ -254,37 +306,53 @@
     import modalPasantia from "@/components/general/utilities/modalPasantia.vue"
     import modalHandler from "@/mixins/modalHandler";
 
+    import errorHandler from "../general/utilities/errorHandler.vue";
 
 export default {  
     name: "solicitudEst",
     components: {
-        modalPasantia
+        modalPasantia,
+        errorHandler
     },
     mixins:[modalHandler],
     data(){
         return{
+            //Error handler
+            showError: false,
+            errorMessage: "",
 
             currentStage: 1,
             studentInformation: "",
             //Guardar temporalmente la información de solicitud, numrecibo 0000000 o null
 
-
-            //BEmp skills
+            //Is bemp
+            //student skills
             studentSkills: [],
             currentSkill: "",
+            //Available skills
+            availableSkills: [],
 
-            //Available skills on select
-            availableSkills: [
-                    {   
-                        skillId: "0",
-                        name: "No disponible",
-                    }
-            ]
+
+            //!Is bemp
+            //Información de la empresa
+            LOAD REQUEST DATA AND RECEIPT FROM BD
+            requestData: {
+                name: "",
+                type: "",
+                otherType: "",
+                phone: "",
+                address: "",
+                tutorName: "",
+                receiptNumber: "",
+            },
 
         }
     },
     methods: {
-          
+        toggleShowNotification(message = ""){
+            this.showError = !this.showError;
+            this.errorMessage = message;
+        },
         alignLabels(selector){
             
             //Align all labels on studentInfo section
@@ -306,70 +374,145 @@ export default {
              //Get career skills
                 this.availableSkills = await this.axiosGet("/bemp/careerskills", {careerId: this.studentInformation.idcarrera});
                 if(!this.availableSkills.success){
-                    //console.log("The error goes here stored on data");
+                    this.availableSkills = []
                 }
 
                 //Get student skills
                 this.studentSkills = await this.axiosGet("/bemp/studentskills");
                 if(!this.studentSkills.success){
-                    //console.log("The error goes here stored on data");
                     this.studentSkills = []
                 }
 
         },
         prevStage(){
             this.currentStage--;
+            this.setStudentInformation();
         },
+        async setStudentInformation(){
+            this.studentInformation = await this.axiosGet("/pasantia/getstudent");
+            if(!this.studentInformation.success){
+                this.toggleShowNotification(this.studentInformation.data)
+            }
+            this.studentInformation = this.studentInformation.data;
+            //console.log(this.studentInformation)
+        },
+        //Submit request
+        async submitRequest(){
+
+            //If not bemp
+            if(!this.studentInformation.bolsaempleos){
+                
+                //Validation
+                for(let key in this.requestData){
+                    const cv = this.requestData[key];
+                    
+                    //receiptNumber can be empty
+                    if(key === "receiptNumber" || key === "otherType"){
+                        continue;
+                    }else{
+                        if(key === "type" && cv === "Otras"){
+                            if(this.requestData["otherType"].trim().length < 1){
+                                const input = document.querySelector(`[name="otherType"]`);
+                                    input.focus();
+                                    return;
+                            }
+                        }
+                        else if(cv.trim().length < 1){
+                            const input = document.querySelector(`[name="${key}"]`);
+                                  input.focus();
+                                  return;
+                        }
+                    }
+
+                }   
+                //Send request
+                const request = await this.axiosPost("/pasantia/request", {requestData: this.requestData});
+                
+                if(request.success){
+                    if(this.requestData.receiptNumber.trim().length > 0 ){
+                        this.toggleShowNotification("Solicitud realizada");
+                        
+
+                    }else{
+                        this.toggleShowNotification("Datos guardados");
+                        
+                    }
+                    //Loading thingy - user experience
+                    setTimeout(() => {
+                        this.$router.push("/my");
+                    }, 2100);
+
+                }
+                else{
+                    console.log(request.data)
+                }
+
+            }
+            /**
+            requestData: {
+                name: "",
+                type: "",
+                otherType: "",
+                phone: "",
+                address: "",
+                tutorName: "",
+                receiptNumber: "",
+            }, */
+
+
+
+        },
+        //Is bemp
         async addSkill(){
             //Check if valid
-            if(this.currentSkill.toString().trim().length < 1) return;
+            if(this.currentSkill.toString().trim().length < 1){
+                this.toggleShowNotification("Seleccione un elemento valido")
+                return;
+            } 
             //Check if exists
             const exists = await this.axiosGet("/bemp/studentskill", {skillId: this.currentSkill});
             if(exists.success){
-                //console.log("Ya existe")
+                this.toggleShowNotification("Ya posees esta habilidad")
                 return;
             }
             //Add
             const added = await this.axiosPost("/bemp/studentskill", {skillId: this.currentSkill});
             if(!added.success){
-                //console.log("Error")
+                this.toggleShowNotification(added.data)
             }
             this.currentSkill = "";
             this.loadSkills();
         },
         async removeSkill(skill){
             const exists = await this.axiosDelete("/bemp/studentskill", {skillId: skill});
+           
             if(!exists.success){
-                //console.log("Error")
+                this.toggleShowNotification(exists.data)
                 return;
             }
 
             this.loadSkills();
         },
-
-        async setStudentInformation(){
-            this.studentInformation = await this.axiosGet("/pasantia/getstudent");
-            if(!this.studentInformation.success){
-                //console.log("The error goes here stored on data");
-            }
-            this.studentInformation = this.studentInformation.data;
-            //console.log(this.studentInformation)
-        },
         async updateStudentBemp(){
 
             const updated = await this.axiosPut("/pasantia/updatebemp", {isBemp: this.studentInformation.bolsaempleos})
-            if(updated.success){
-                //console.log("loading thingy, updated studentInformation.bolsaempleos successfuly")
+            if(!updated.success){
+                this.toggleShowNotification(updated.data)
             }
         },
         
+        //!Is bemp
+
+
+
         
+
     },
     watch:{
         'studentInformation.tipopasantia': async function (){
             const updated = await this.axiosPut("/pasantia/updatetpasantia", {tipopasantia: this.studentInformation.tipopasantia})
-            if(updated.success){
-                //console.log("loading thingy, updated studentInformation.tipopasantia successfuly")
+            if(!updated.success){
+                this.toggleShowNotification(updated.data)
             }
         }
     },  
@@ -390,7 +533,6 @@ export default {
         this.setStudentInformation();
         this.alignLabels(".utesaForm .studentInfo label");
         this.alignLabels(".utesaForm .companyInfo label");
-
       
     },
     updated(){
@@ -406,7 +548,9 @@ export default {
 
 <style scoped>
  
-
+    .ml-5{
+        margin-left: 5px;
+    }
     .isBEmp, .isNotBEmp{
         font-size: 35px;
         margin-left: 10px;
@@ -508,6 +652,7 @@ export default {
     }
 
 
+ 
 </style>
 
 

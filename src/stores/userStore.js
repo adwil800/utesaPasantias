@@ -43,23 +43,26 @@ export const useUserStore = defineStore("userStore", {
             if(res.data.success){
                   return true;
             }else{ 
+                this.sessionInfo.$state.sessionStatus  = res.data.data;
                 return false;
             } 
 
         },
 
         async logoutUser(){
+         
+            //Clear session message:
             if(this.isUserLogged()){
 
-                await axios.get("auth/logout");
-                //User logged out
-                this.userData = {};
-                this.isLogged = false;
-                this.$router.push("/login");
+                    await axios.get("auth/logout");
+                    //User logged out
+                    this.userData = {loggedOut: true};
+                    this.isLogged = false;
+                    this.$router.push("/login");
 
-            }else{
-                this.$router.push("/login");
-            }
+                }else{
+                    this.$router.push("/login");
+                }
 
         },
         

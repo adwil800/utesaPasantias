@@ -33,14 +33,7 @@ const app = createApp(App);
 
 
 router.beforeResolve( async (to, from) => {
-
-   
-    IM HERE, GOT TO CHECK FOR SESSION EXPIRATION WHILE GOING NAVIGATING WITH THE FOLLOWING CODE
-    if(res.data.sessionAlive === false){
-        this.sessionInfo.$state.sessionStatus = res.data.data;
-    }
-    ENDOFCODE
-
+ 
     const userStore = useUserStore();
 
     //Update current login state
@@ -48,6 +41,9 @@ router.beforeResolve( async (to, from) => {
           
     if(isLogged) userStore.setLoggedUser();
     else{
+        if(userStore.$state.userData.loggedOut){
+            userStore.$state.sessionInfo.sessionStatus = ""
+        }
         userStore.$state.isLogged = false;
         userStore.$state.userData = {};
     }
@@ -57,57 +53,24 @@ router.beforeResolve( async (to, from) => {
     //   '/solicitud' '/admin/empleos' '/admin/solicitud'
   
         switch(to.path){
-            //DONE
-            case "/": { 
-                if(!isLogged){
-                    return "/login";
-                } 
-
-                break;
-            }
-            
-
-            case "/solicitud": {
-                if(!isLogged){
-                    return "/login";
-                }
-
-                break;
-            }
-            
-            case "/admin/solicitud": {
-                if(!isLogged){
-                    return "/login";
-                }
-
-                break;
-            }
-
-            case "/admin/empleos": {
-                if(!isLogged){
-                    return "/login";
-                }
-
-                break;
-            }
-            
 
             //DONE
             case "/login": {
-
+                if(from.path === "/"){
+                    userStore.$state.sessionInfo.sessionStatus = ""
+                }
                 if(isLogged){
                     console.log("tried to go to login")
-                    return "/";
+                    return "/my";
                 }
-
                 break;
             }
-           
-
             //DONE - WHICHEVER ROUTE IT IS IT WILL SEND ME BACK HOME, 404 SITE NOT WORKING
             default: {
-                console.log("rip")
-                    return "/";
+                if(!isLogged){
+                    return "/login";
+                } 
+                break;
             }
         }
 

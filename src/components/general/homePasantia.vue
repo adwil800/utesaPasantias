@@ -66,7 +66,7 @@
 
                                 <div class="reqIcon pendingReq">
                                     <i class="fa-solid fa-circle-xmark"></i>
-                                    <i class="reqMoreInfo fa-solid fa-circle-exclamation" @click="openModal"></i>
+                                    <i class="reqMoreInfo fa-solid fa-circle-exclamation" @click="openModal('reqPagoPas')"></i>
                                 </div>
                                 
                                 <div class="reqInfo">
@@ -130,10 +130,13 @@
         
         <template v-slot:header>
                 <div class="formHeader ">
-                    <span>¿Como completar el requisito pago derecho a pasantía?</span>
+                    <div v-if="currentModalData === 'reqPagoPas'">
+                        <span>¿Como completar el requisito pago derecho a pasantía?</span>
+                    </div>
                 </div>
         </template>
         <template v-slot:body>
+            <div v-if="currentModalData === 'reqPagoPas'">
 
                 <ol>
                     <li>
@@ -144,6 +147,7 @@
                     </li>
                 
                 </ol>
+            </div>
                 
         </template>
 

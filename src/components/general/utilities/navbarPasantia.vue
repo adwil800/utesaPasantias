@@ -38,7 +38,7 @@ export default {
       this.$emit("toggleSidebar");
     },
     goHome(){
-      this.$router.push("/");
+      this.$router.push("/my");
     },
     logout(){
       

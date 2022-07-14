@@ -15,7 +15,7 @@ export default{
                 return rows.data;
             }else{
                 
-                if(rows.data.sessionAlive === false){
+                if(rows.data.isLoggedIn === false){
                     this.sessionInfo.$state.sessionStatus = rows.data.data;
                     this.$router.push("/login");
                     return "";
@@ -33,7 +33,7 @@ export default{
                 return rows.data;
             }else{
                 
-                if(rows.data.sessionAlive === false){
+                if(rows.data.isLoggedIn === false){
                     this.sessionInfo.$state.sessionStatus = rows.data.data;
                     this.$router.push("/login");
                     return "";
@@ -51,7 +51,7 @@ export default{
                 return rows.data;
             }else{
                 
-                if(rows.data.sessionAlive === false){
+                if(rows.data.isLoggedIn === false){
                     this.sessionInfo.$state.sessionStatus = rows.data.data;
                     this.$router.push("/login");
                     return "";
@@ -68,7 +68,7 @@ export default{
                 return rows.data;
             }else{
                 
-                if(rows.data.sessionAlive === false){
+                if(rows.data.isLoggedIn === false){
                     this.sessionInfo.$state.sessionStatus = rows.data.data;
                     this.$router.push("/login");
                     return "";

@@ -9,7 +9,7 @@
 
         <div class="loginForm">
 
-            <span class="sessionInfo">{{sessionStore.$state.sessionStatus}}</span>
+            <span class="sessionInfo" v-if="sessionStore.$state.sessionStatus">{{sessionStore.$state.sessionStatus}}</span>
 
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-hotel"></i>
@@ -73,7 +73,7 @@ export default {
                 //console.log("Welcome "+res.data.data)
                 //Set current user and allow conditional rendering
                 this.userStore.setLoggedUser();  
-                this.$router.push("/");
+                this.$router.push("/my");
             }
 
 
@@ -128,12 +128,15 @@ export default {
         margin-bottom: 20px;
     }
 
-    .sessionInfo{
-        align-self: center;
+    .sessionInfo{ 
+        padding: 10px;
         margin-bottom: 10px;
-        margin-top: 10px;
+        border-radius: 10px; 
         font-size: 18px;
         font-weight: 500;
+        background-color: rgb(240, 218, 128);
+        width: 100%;
+        text-align: center;
     }
 
     

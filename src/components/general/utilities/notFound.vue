@@ -29,7 +29,7 @@ export default {
 
         redirectTimer(){
             if(this.redirectTimer < 1){
-                this.$router.push({path: "/"});
+                this.$router.push({path: "/my"});
             }else{
                 setTimeout(() => {
                     this.redirectTimer--;

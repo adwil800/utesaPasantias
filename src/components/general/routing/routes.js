@@ -17,7 +17,7 @@ const routes = [
     {path: "/:catchAll(.*)", name: "Not found", component: notFound},
 
     //Student
-    { path: '/', name: "home", component: homePasantia },
+    { path: '/my', name: "home", component: homePasantia },
     { path: '/solicitud', name: "solicitud", component: solicitudEst },
 
     //Admin
