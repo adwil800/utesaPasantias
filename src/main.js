@@ -3,10 +3,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 //Mixins
 import IGShading from './mixins/IGShading';
-import axiosHandler from './mixins/axiosHandler';
 
 import App from './App.vue'
-import router from "./components/general/routing/routes";
+import router from "./components/routing/routes";
 
 //PINIA global state management
 import { createPinia } from 'pinia';
@@ -26,10 +25,10 @@ const app = createApp(App);
       app.use(router);
       app.use(VueAxios, axios);
       app.mixin(IGShading);
-      app.mixin(axiosHandler);
       app.mount('#app');
 
 //Navigation guards
+
 
 
 router.beforeResolve( async (to, from) => {
@@ -47,11 +46,9 @@ router.beforeResolve( async (to, from) => {
         userStore.$state.isLogged = false;
         userStore.$state.userData = {};
     }
-    
-    console.log("Is logged: ", isLogged, " from path: ", from.path, " to path: ", to.path)
+    //console.log(userStore.$state.userData)
+    //console.log("Is logged: ", isLogged, " from path: ", from.path, " to path: ", to.path)
 
-    //   '/solicitud' '/admin/empleos' '/admin/solicitud'
-  
         switch(to.path){
 
             //DONE
@@ -65,12 +62,12 @@ router.beforeResolve( async (to, from) => {
                 }
                 break;
             }
+
             //DONE - WHICHEVER ROUTE IT IS IT WILL SEND ME BACK HOME, 404 SITE NOT WORKING
             default: {
                 if(!isLogged){
                     return "/login";
-                } 
-                break;
+                }
             }
         }
 

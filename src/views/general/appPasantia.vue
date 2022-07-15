@@ -1,8 +1,7 @@
 <template>
 
-
     <navbarPasantia @toggleSidebar="toggleSidebar"/>
-    <sidebarMenu :toggled="isToggled"/>
+    <sidebarMenu :toggled="isToggled" :removeReqAccess="isReqInProcess" :user="isUser"/>
 
     <div id="mainContent" > 
         <router-view/>
@@ -15,6 +14,7 @@
 import sidebarMenu from "@/components/general/routing/sidebarMenu.vue"
 import navbarPasantia from "@/components/general/utilities/navbarPasantia.vue"
 import windowResize from "@/mixins/windowResize";
+import { useAxiosStore, useUserStore } from "@/stores/userStore";
 
 export default {
   name: 'appPasantia',
@@ -26,6 +26,10 @@ export default {
   data(){
     return{
       isToggled: false,
+      isReqInProcess: false,
+      isUser: "",
+      axiosStore: useAxiosStore(),
+      userStore: useUserStore(),
     }
   },
   methods:{
@@ -33,6 +37,30 @@ export default {
     toggleSidebar(){
         this.isToggled = !this.isToggled;
     },
+    async requestStatus(){
+
+      const userLevel = this.userStore.$state.userData.tipo;
+      if(userLevel === "user"){
+        this.isUser = true;
+      }else{
+        this.isUser = false;
+      }
+
+      //Request information
+      const reqData = await this.axiosStore.axiosGet("/pasantia/requeststatus", {studentId: this.userStore.$state.userData.idusuario});
+      if(reqData.success){
+          if(reqData.data.status === "pending"){
+              this.isReqInProcess = true;
+          }
+      }
+
+      if(!this.isUser){ //is admin
+        //Dont show solicitudes est
+        this.isReqInProcess = true;
+      } 
+
+    }, 
+
   }, 
   watch:{
 
@@ -47,9 +75,14 @@ export default {
           this.isToggled = true;
         }
 
+      this.requestStatus();    
+
     }
 
-  }
+  },
+  mounted(){
+    this.requestStatus();    
+  },
 
 }
 </script>

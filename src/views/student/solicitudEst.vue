@@ -197,12 +197,7 @@
                                 <label for="">TIPO:</label>
                                 <select v-model="requestData.type" name="type" >
                                     <option value="" disabled selected>Selecciona</option>
-                                    <option value="Industrial">Industrial</option>
-                                    <option value="De servicios">De servicios</option>
-                                    <option value="Comercio">Comercio</option>
-                                    <option value="Pública">Pública</option>
-                                    <option value="Privada">Privada</option>
-                                    <option value="Otras">Otras, especifique</option>
+                                    <option v-for="(type, index) in companyTypes" :key="index" :value="type">{{type}}</option>
                                 </select>
 
                                 <input class="ml-5" type="text" name="otherType" v-if="requestData.type === 'Otras'" v-model="requestData.otherType">
@@ -306,7 +301,9 @@
     import modalPasantia from "@/components/general/utilities/modalPasantia.vue"
     import modalHandler from "@/mixins/modalHandler";
 
-    import errorHandler from "../general/utilities/errorHandler.vue";
+    import errorHandler from "@/components/utilities/errorHandler";
+
+    import { useAxiosStore, useUserStore } from "@/stores/userStore";
 
 export default {  
     name: "solicitudEst",
@@ -317,26 +314,28 @@ export default {
     mixins:[modalHandler],
     data(){
         return{
+            axiosStore: useAxiosStore(),
+            userStore: useUserStore(),
             //Error handler
             showError: false,
             errorMessage: "",
 
             currentStage: 1,
             studentInformation: "",
-            //Guardar temporalmente la información de solicitud, numrecibo 0000000 o null
 
             //Is bemp
             //student skills
             studentSkills: [],
             currentSkill: "",
             //Available skills
-            availableSkills: [],
+            availableSkills: [], 
 
+           // Set request when #recibo is provided, set request when skills and stuff are provided
 
             //!Is bemp
             //Información de la empresa
-            LOAD REQUEST DATA AND RECEIPT FROM BD
             requestData: {
+                reqId: "",
                 name: "",
                 type: "",
                 otherType: "",
@@ -345,6 +344,8 @@ export default {
                 tutorName: "",
                 receiptNumber: "",
             },
+            companyTypes: ["Industrial", "De servicios", "Comercio", "Pública", "Privada" ,"Otras"]
+                
 
         }
     },
@@ -360,7 +361,7 @@ export default {
             let max = Math.max.apply(Math, labels.map(e => {return e.offsetWidth})) + 3;
             labels.forEach(e => e.style.marginRight = max - e.offsetWidth+"px")
             
-        },
+        }, 
         nextStage(){
 
             this.currentStage++;
@@ -372,13 +373,13 @@ export default {
         },
         async loadSkills(){
              //Get career skills
-                this.availableSkills = await this.axiosGet("/bemp/careerskills", {careerId: this.studentInformation.idcarrera});
+                this.availableSkills = await this.axiosStore.axiosGet("/bemp/careerskills", {careerId: this.studentInformation.idcarrera});
                 if(!this.availableSkills.success){
                     this.availableSkills = []
                 }
 
                 //Get student skills
-                this.studentSkills = await this.axiosGet("/bemp/studentskills");
+                this.studentSkills = await this.axiosStore.axiosGet("/bemp/studentskills", {studentId: this.userStore.$state.userData.idusuario});
                 if(!this.studentSkills.success){
                     this.studentSkills = []
                 }
@@ -386,15 +387,31 @@ export default {
         },
         prevStage(){
             this.currentStage--;
-            this.setStudentInformation();
         },
-        async setStudentInformation(){
-            this.studentInformation = await this.axiosGet("/pasantia/getstudent");
+        async setDefaultData(){
+            //General student information
+            this.studentInformation = await this.axiosStore.axiosGet("/pasantia/getstudent", {studentId: this.userStore.$state.userData.idusuario});
             if(!this.studentInformation.success){
-                this.toggleShowNotification(this.studentInformation.data)
+                this.toggleShowNotification("Error del servidor");
+                return;
             }
             this.studentInformation = this.studentInformation.data;
-            //console.log(this.studentInformation)
+
+            //Request information
+            const reqData = await this.axiosStore.axiosGet("/pasantia/request", {studentId: this.userStore.$state.userData.idusuario});
+            if(!reqData.success){
+                //Check if there's just no request
+                if(!reqData.noReq){
+                   //A different error
+                    this.toggleShowNotification("Error del servidor")
+                }
+                return;
+            }
+            this.requestData = reqData.data;    
+            if(!this.companyTypes.includes(this.requestData.type)){
+                this.requestData.type = "Otras";
+            }
+
         },
         //Submit request
         async submitRequest(){
@@ -405,9 +422,8 @@ export default {
                 //Validation
                 for(let key in this.requestData){
                     const cv = this.requestData[key];
-                    
                     //receiptNumber can be empty
-                    if(key === "receiptNumber" || key === "otherType"){
+                    if(key === "receiptNumber" || key === "otherType" || key === "reqId"){
                         continue;
                     }else{
                         if(key === "type" && cv === "Otras"){
@@ -425,8 +441,15 @@ export default {
                     }
 
                 }   
-                //Send request
-                const request = await this.axiosPost("/pasantia/request", {requestData: this.requestData});
+
+                let request = "";
+                if(!this.requestData.reqId){
+                    //Send new request
+                    request = await this.axiosStore.axiosPost("/pasantia/request", {requestData: this.requestData, });
+                }else{
+                    //Update request
+                    request = await this.axiosStore.axiosPut("/pasantia/request", {requestData: this.requestData});
+                }
                 
                 if(request.success){
                     if(this.requestData.receiptNumber.trim().length > 0 ){
@@ -444,22 +467,10 @@ export default {
 
                 }
                 else{
-                    console.log(request.data)
+                    this.toggleShowNotification("Error del servidor")
                 }
 
             }
-            /**
-            requestData: {
-                name: "",
-                type: "",
-                otherType: "",
-                phone: "",
-                address: "",
-                tutorName: "",
-                receiptNumber: "",
-            }, */
-
-
 
         },
         //Is bemp
@@ -470,13 +481,13 @@ export default {
                 return;
             } 
             //Check if exists
-            const exists = await this.axiosGet("/bemp/studentskill", {skillId: this.currentSkill});
+            const exists = await this.axiosStore.axiosGet("/bemp/studentskill", {skillId: this.currentSkill, studentId: this.userStore.$state.userData.idusuario});
             if(exists.success){
                 this.toggleShowNotification("Ya posees esta habilidad")
                 return;
             }
             //Add
-            const added = await this.axiosPost("/bemp/studentskill", {skillId: this.currentSkill});
+            const added = await this.axiosStore.axiosPost("/bemp/studentskill", {skillId: this.currentSkill, studentId: this.userStore.$state.userData.idusuario});
             if(!added.success){
                 this.toggleShowNotification(added.data)
             }
@@ -484,7 +495,7 @@ export default {
             this.loadSkills();
         },
         async removeSkill(skill){
-            const exists = await this.axiosDelete("/bemp/studentskill", {skillId: skill});
+            const exists = await this.axiosStore.axiosDelete("/bemp/studentskill", {skillId: skill, studentId: this.userStore.$state.userData.idusuario});
            
             if(!exists.success){
                 this.toggleShowNotification(exists.data)
@@ -495,7 +506,7 @@ export default {
         },
         async updateStudentBemp(){
 
-            const updated = await this.axiosPut("/pasantia/updatebemp", {isBemp: this.studentInformation.bolsaempleos})
+            const updated = await this.axiosStore.axiosPut("/pasantia/updatebemp", {isBemp: this.studentInformation.bolsaempleos, studentId: this.userStore.$state.userData.idusuario})
             if(!updated.success){
                 this.toggleShowNotification(updated.data)
             }
@@ -510,7 +521,7 @@ export default {
     },
     watch:{
         'studentInformation.tipopasantia': async function (){
-            const updated = await this.axiosPut("/pasantia/updatetpasantia", {tipopasantia: this.studentInformation.tipopasantia})
+            const updated = await this.axiosStore.axiosPut("/pasantia/updatetpasantia", {tipopasantia: this.studentInformation.tipopasantia, studentId: this.userStore.$state.userData.idusuario})
             if(!updated.success){
                 this.toggleShowNotification(updated.data)
             }
@@ -530,7 +541,7 @@ export default {
     },  
     mounted(){
 
-        this.setStudentInformation();
+        this.setDefaultData();
         this.alignLabels(".utesaForm .studentInfo label");
         this.alignLabels(".utesaForm .companyInfo label");
       

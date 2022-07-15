@@ -39,7 +39,7 @@
 
 <script>
 
-import {useUserStore, useSessionStore} from "@/stores/userStore";
+import {useUserStore, useSessionStore, useAxiosStore} from "@/stores/userStore";
 export default {
     name: "loginPasantia",
     components:{
@@ -49,6 +49,7 @@ export default {
         return{
             userStore: useUserStore(),
             sessionStore: useSessionStore(),
+            axiosStore: useAxiosStore(),
             username: "1161609",
             psw: "1161609",
             campusId: "2",
@@ -62,7 +63,7 @@ export default {
             
             const body = {username: this.username, psw: this.psw, campusId: this.campusId};
             
-            const res = await this.axiosPost("auth/login", body);
+            const res = await this.axiosStore.axiosPost("auth/login", body);
 
             this.sessionStore.$state.sessionStatus = "";
             if(!res.success){

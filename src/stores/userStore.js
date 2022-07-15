@@ -3,6 +3,88 @@ import { defineStore } from "pinia";
 import axios from 'axios'
 
 
+export const useAxiosStore = defineStore("axiosStore", {
+    state: () => {
+        return {
+            sessionInfo: useSessionStore(),
+        }
+    },
+    actions: {
+
+        async axiosGet(route, reqParams={}){
+            const rows = await axios.get(route, { params: reqParams });
+            if(rows.data.success){
+                return rows.data;
+            }else{
+                
+                if(rows.data.isLoggedIn === false){
+                    this.sessionInfo.$state.sessionStatus = rows.data.data;
+                    this.$router.push("/login");
+                    return "";
+                }else{
+                    return rows.data;
+                }
+
+            }
+            
+        },
+        async axiosPost(route, body){
+            if(!body) return "No data to post";
+            const rows = await axios.post(route, body);
+            if(rows.data.success){
+                return rows.data;
+            }else{
+                
+                if(rows.data.isLoggedIn === false){
+                    this.sessionInfo.$state.sessionStatus = rows.data.data;
+                    this.$router.push("/login");
+                    return "";
+                }else{
+                    return rows.data;
+                }
+
+            }
+            
+        },
+        async axiosPut(route, body){
+            if(!body) return "No data to put";
+            const rows = await axios.put(route, body);
+            if(rows.data.success){
+                return rows.data;
+            }else{
+                
+                if(rows.data.isLoggedIn === false){
+                    this.sessionInfo.$state.sessionStatus = rows.data.data;
+                    this.$router.push("/login");
+                    return "";
+                }else{
+                    return rows.data;
+                }
+
+            }
+            
+        },
+        async axiosDelete(route, reqParams={}){
+            const rows = await axios.delete(route,  { params: reqParams });
+            if(rows.data.success){
+                return rows.data;
+            }else{
+                
+                if(rows.data.isLoggedIn === false){
+                    this.sessionInfo.$state.sessionStatus = rows.data.data;
+                    this.$router.push("/login");
+                    return "";
+                }else{
+                    return rows.data;
+                }
+
+            }
+            
+        },
+
+    }
+})
+
 export const useSessionStore = defineStore("sessionStore", {
     state: () => {
         return {
@@ -18,6 +100,7 @@ export const useUserStore = defineStore("userStore", {
             userData: {},
             isLogged: false,
             sessionInfo: useSessionStore(),
+            isReqInProgress: false,
         }
     },
     actions:{

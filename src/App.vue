@@ -11,8 +11,8 @@
 
 <script>
 
-import loginPasantia from "@/components/general/loginPasantia.vue";
-import appPasantia from "@/components/general/appPasantia.vue";
+import loginPasantia from "@/views/general/loginPasantia.vue";
+import appPasantia from "@/views/general/appPasantia.vue";
 
 
 import {useUserStore} from "@/stores/userStore";
@@ -27,6 +27,11 @@ export default {
       userStore: useUserStore(),
     }
   },
+  created(){
+
+    this.userStore.setLoggedUser();
+
+  }
 
 }
 
