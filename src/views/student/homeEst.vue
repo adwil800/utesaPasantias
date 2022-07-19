@@ -269,7 +269,7 @@ export default {
             }
 
             //Get career skills
-            this.availableSkills = await this.axiosStore.axiosGet("/bemp/careerskills", {careerId: studentCareer.data.idcarrera});
+            this.availableSkills = await this.axiosStore.axiosGet("/maintenances/careerskills", {careerId: studentCareer.data.idcarrera});
             if(!this.availableSkills.success){
                 this.availableSkills = []
             }

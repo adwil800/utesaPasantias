@@ -32,8 +32,8 @@
             hidden: user,
             child: [
               {
-                href: '/admin/habilidades',
-                title: 'Habilidades bolsa de empleos'
+                href: '/admin/mant/bolsaempleos',
+                title: 'Bolsa de empleos'
               }
             ]
         },

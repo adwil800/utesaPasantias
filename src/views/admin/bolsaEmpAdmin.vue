@@ -17,17 +17,11 @@
 
                 <div class="utesaForm ">
 
-                    <div class="bempNav ">
-                        <div class="bempNavItems">
-                            <span>&nbsp;Administrar empresas&nbsp;</span>
-                            <span>&nbsp;Administrar vacantes&nbsp;</span>
-                        </div>
-                    </div>
-
+                    
 
 
                     <!--Admin companies-->
-                    <div class="companyManagement mt-4 ">
+                    <div class="companyManagement ">
                         <!--My bemp skills-->
                         <div class="formHeader">
                             <span>Administrar empresas</span>
@@ -36,29 +30,44 @@
                         <div class="row mobileReversedCol">
                             
                             <!--Add, edit, remove company-->
-                            <div class="col-md-6 mb-3">
+                            <div class="col-sm-5 mb-3">
 
-                                <label for="">Empresa</label>
-                                <input type="text" v-model="companyName">
-                                    <!--Vacants-->
-                                    <label for="">Vacantes</label>
-                                    <div class="inputGroup">
-                                        <input type="text" class="noRightRadius" v-model="currentVacant" 
+                                    <label for="" class="alignCenter">EMPRESA</label>
+                                    <div class="inputGroup ">
+                                        <input type="text" v-model="companyData.name" name="name" class="noRightRadius" disabled
                                         @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
-                                        <button class="Ubtn utesaBtn inputGroupAddon noLeftRadius" 
-                                        @click="addVacant">Agregar</button>
+                                        <i class="inputGroupAddon noLeftRadius fa-solid fa-xmark utesaDanger" v-if="this.companyId !== ''" @click="removeUpdateMode"></i>
                                     </div>
-                                        
 
-                                    <ul class="UList mt-3">
-                                        <li v-for="vacant, index in vacants" :key="index" 
-                                        @dblclick="removeVacant(index)"> {{vacant.vacant}} : {{index}}</li>
-                                    </ul>
+                                    <!--Vacants-->
+                                    <div>
+                                        <label for="">VACANTES</label>
+                                    
+                                        <!--Campus-->
+                                        <select x v-model="addVacantObj.campusId" name="campusId" >
+                                            <option value="" disabled selected>Selecciona un recinto</option>
+                                            <option v-for="campus in campuses" :key="campus.idrecinto" :value="campus.idrecinto">{{campus.nombre}}</option>
+                                        </select>
+
+                                        <select class="mb-2 mt-2" v-model="addVacantObj.currentCareer" name="currentCareer">
+                                            <option value="" disabled selected> Carrera </option>
+                                            <option v-for="career in careers" :key="career.idcarrera" :value="career.idcarrera">{{career.nombre}}</option>
+                                        </select>
+
+                                        <input type="text" v-model="addVacantObj.currentVacant" name="currentVacant">
+                                        <div style="display: flex; justify-content: center">
+                                            <button class="Ubtn utesaBtn blockBtn" @click="addVacant" >Agregar</button>
+                                        </div>
+                                        <ul class="UList mt-3">
+                                            <li v-for="vacant, index in vacants" :key="index" 
+                                            @dblclick="removeVacant(index)"> {{vacant.vacant}} : {{index}}</li>
+                                        </ul>
+                                    </div>
                                     <!--Vacants-->
 
 
                                     <!--Vacant skills-->
-                                    <label for="">Habilidades</label>
+                                    <label for="">HABILIDADES</label>
                                     <div class="inputGroup">
 
                                         <!--Vacant-->
@@ -77,9 +86,7 @@
                                         
                                         <button class="Ubtn utesaBtn inputGroupAddon noLeftRadius" 
                                         @click="addVacantSkill(currentVacantIndex, currentVacantSkill)">Agregar</button>
-                                    </div IM HERE WORKING ON ADMIN BEEMP, CRUD ON VACANTS AND COMPANIES, ADD ADDRESSES AND STUFF>
-                                        
-
+                                    </div>
                                     <ul class="UList mt-3">
                                     <!--Render vacant skills-->
                                         <li v-for="skill in skillsPerVacant" :key="skill.id" 
@@ -90,35 +97,59 @@
                                     </ul>
                                     <!--Vacant skills-->
 
-                                    HANDLE EDIT MODE DONE, ADD BUTTONS AND VISUAL SIGNIFIERS
-                                    MAKE AN ACTUAL CHECKLIST OUT OF VSCODE TO KEEP TRACK OF PROGRESS
                                 
                             </div> 
                             <!--Add, edit, remove company -->
 
                             
                             <!--Company information-->
-                            <div class="col-md-6 tableContainer mb-3">
-                                <table class=" table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Empresa</th>
-                                            <th scope="col">Vacantes</th>
-                                            <th scope="col">Creado?</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
+                            <div class="mt-3 col-sm-7">
+                                <label for="">Filtrar por {{filterBy}}</label>
+                                <input type="text" v-model="filterText" @input="filterCompanies">
+                                
+                                <div class="tableContainer">
+                                    <table class=" table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nombre
+                                                    <input type="radio" value="nombre" v-model="filterBy">
+                                                </th>
+                                                <th scope="col">Tipo
+                                                    <input type="radio" value="tipo" v-model="filterBy">
+                                                </th>
+                                                <th scope="col">Actividad
+                                                    <input type="radio" value="actividad" v-model="filterBy">
+                                                    
+                                                </th>
+                                                <th scope="col">Teléfono
+                                                    <input type="radio" value="telefono" v-model="filterBy">
 
-                                        <tr v-for="cData, index in companyData" :key="index" @click="editCompany(cData.id)">
-                                            <td>{{index+1}}</td>
-                                            <td>{{cData.name}}</td>
-                                            <td>{{cData.vacantData.length}}</td>
-                                            <td>- - -</td>
-                                        </tr>
-                                    </tbody>
+                                                </th>
+                                                <th scope="col">Dirección
+                                                    <input type="radio" value="dirección" v-model="filterBy">
+
+                                                </th>
+                                                <th scope="col">Encargado
+                                                    <input type="radio" value="encargado" v-model="filterBy">
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr v-for="company, index in allCompanies" :key="company.id" class="pointer" @click="editCompany(company.id, index)">
+                                                <td>{{company.name}}</td>
+                                                <td>{{company.type}}</td>
+                                                <td>{{company.about}}</td>
+                                                <td>{{company.phone}}</td>
+                                                <td>{{company.address}}</td>
+                                                <td>{{company.tutorName}}</td>
+                                            </tr>
+
+                                        </tbody>
                                     </table>
+                                </div>
+
                             </div>
                             <!--Company information-->
 
@@ -243,110 +274,227 @@
         </div>
 </div>
 
+
+
+
+    <Transition name="bounce">
+        <modalPasantia @closeModal="closeModal" v-if="isOpen">
+        
+        <template v-slot:header>
+                <div class="formHeader ">
+                    <div v-if="currentModalData === 'bemp'">
+                        <span>Empresas</span>
+                    </div>
+                </div>
+        </template>
+        <template v-slot:body>
+
+            <div v-if="currentModalData === 'bemp'">
+
+                <!--Company information-->
+
+            </div>
+
+        </template>
+
+        </modalPasantia>
+    </Transition>
+
+    <Transition name="bounce">
+        <errorHandler v-if="showError" @removeError="toggleShowNotification" :isNotification="isMsgNotification" :message="errorMessage"/>
+    </Transition>
+
 </template>
 
 <script> 
 
+    import errorHandler from "@/components/utilities/errorHandler";
+    import modalPasantia from "@/components/utilities/modalPasantia";
+    import modalHandler from "@/mixins/modalHandler";
 
+    import { useAxiosStore } from "@/stores/userStore";
 export default {
     name: "bolsaEmpAdmin", 
     components: {
+        modalPasantia,
+        errorHandler
     },
+    mixins: [modalHandler],
     data(){
         return{
+
+            axiosStore: useAxiosStore(),
+             //Handle company selection
+            companyId: "", //To update
+            companyData: {
+                name: "",
+                type: "",
+                about: "",
+                otherType: "",
+                phone: "",
+                address: "",
+                tutorName: "",
+            },
+            //Companies modal for editing
+            allCompanies: [],
+            filterBy: "nombre",
+            filterText: "",
+
+            //Data for vacant registration
+            campuses: [],
+            careers: [],
+            addVacantObj:{
+                campusId: "",
+                currentCareer: "",
+                currentVacant: "",
+            },
+
+
 
             //QOL vars
             isShowSubrow: false,
 
 
             //General from BD
-            companyData: [
-                {
-                    id: "1",
-                    name: "Mkr.co",
-                    vacantData: [
-                        {
-                            vacant: "Web dev",
-                            skills: [1, 2],
-                            status: "Unavailable",
-                        },
-                        {
-                            vacant: "Analyst",
-                            skills: [3],
-                            status: "Available",
-                        },
-                    ],
-                },
-                {
-                    id: "2",
-                    name: "KeenEye.co",
-                    vacantData: [
-                        {
-                            vacant: "Checker",
-                            skills: [0, 2],
-                            status: "Available",
-                        },
-                        {
-                            vacant: "DevOps",
-                            skills: [1],
-                            status: "Unavailable",
-                        },
-                        {
-                            vacant: "Programming",
-                            skills: [3],
-                            status: "Available",
-                        },
-                    ],
-                },
-            ],
-            skills: [
-                {
-                    id: 0,
-                    name:"Php"
-                },
-                {
-                    id: 1,
-                    name:"React"
-                },
-                {
-                    id: 2,
-                    name:"Javascript"
-                },
-                {
-                    id: 3,
-                    name:"Java"
-                },
             
-            ],
-
-
 
             
             //Company management
             companyName: "",
-            currentVacant: "",
             vacants: [{vacant: "KOK", skills:[0, 2, 3]}],
             currentVacantIndex: "",
             currentVacantSkill: "",
 
 
 
+          
+
         }
     },
     methods: {
-        addVacant(){
-            //Check if valid
-            if(this.currentVacant.trim().length < 1) return;
-            //Check if exists
-            for (var i = 0; i < this.vacants.length; i++) {
-                if(this.vacants[i].vacant == this.currentVacant){
-                    return;
-                }                
-            }
-            //Add
-            this.vacants.push({vacant: this.currentVacant, skills: []});
 
-            this.currentVacant = "";
+        
+        //Company selection
+        clearTableSelection(){
+            const trs = document.querySelectorAll(".tableContainer table tbody tr");
+            trs.forEach(tr => {tr.classList.remove("selectedRow")})
+        },
+        editCompany(companyId, index){
+            this.clearTableSelection();
+
+            const trs = document.querySelectorAll(".tableContainer table tbody tr");
+            trs[index].classList.add("selectedRow");
+
+            this.companyId = companyId;
+            this.closeModal();
+            this.companyData = {...this.allCompanies[index]};
+            
+            //Update campus and careers
+            this.getCampus();
+            
+        },
+        removeUpdateMode(){
+            this.companyId = "";
+            this.clearTableSelection();
+            for(let key in this.companyData){
+                this.companyData[key] = "";
+            }   
+        },
+        filterCompanies(){
+            //Tbody
+            const trs = document.querySelectorAll(".tableContainer table tbody tr");
+            let child = "";
+            switch(this.filterBy){
+                case "nombre": {
+                        child = 0;
+                    break;
+                }
+                case "tipo": {
+                        child = 1;
+                    break;
+                }
+                case "actividad": {
+                        child = 2;
+                    break;
+                }
+                case "telefono": {
+                        child = 3;
+                    break;
+                }
+                case "dirección": {
+                        child = 4;
+                    break;
+                }
+                case "encargado": {
+                        child = 5;
+                    break;
+                }
+            }  
+            trs.forEach(tr => {
+
+                const filteredRow = Array.from(tr.children)[child];
+                const isVisible = filteredRow.textContent.toLowerCase().includes(this.filterText.toLowerCase());
+                tr.classList.toggle("hidden", !isVisible);
+
+            });
+
+        },
+        async getCompanies(){
+            //Load companies
+            const req = await this.axiosStore.axiosGet("/bemp/company");
+            if(req.success){
+                this.allCompanies = req.data;
+            }else{ 
+                this.toggleShowNotification("Error del servidor");
+                this.allCompanies = [];
+            }
+
+        },
+
+
+
+        //Vacant handlers
+        async getCampus(){
+            const campuses = await this.axiosStore.axiosGet("/auth/getcampus");
+            if(!campuses.success){
+                this.toggleShowNotification("Error del servidor");
+                return;
+            }
+            this.campuses = campuses.data;
+        },
+        async setCareers(){
+            const careers = await this.axiosStore.axiosGet("/maintenances/career");
+            if(!careers.success){
+                this.toggleShowNotification("Error del servidor");
+                return;
+            }
+            this.careers = careers.data;
+        },
+
+        addVacant(){
+            
+            if(this.companyId.toString().trim().length < 1){
+                this.toggleShowNotification("Selecciona una empresa");
+            }
+            
+            //Validation
+            for(let key in this.addVacantObj){
+                const cv = this.addVacantObj[key];
+                if(cv.toString().trim().length < 1){
+                    const input = document.querySelector(`[name="${key}"]`);
+                        input.focus();
+                            return;
+                }
+            }  
+            
+            //Check if exists
+            //Add
+            const added = this.axiosStore.axiosPost("/bemp/vacants", { companyId: this.companyId, careerId: this.addVacantObj.careerId, campusId: this.addVacantObj.campusId, name: this.addVacantObj.currentVacant})
+            if(!added.success){
+                this.toggleShowNotification("Error del servidor");
+            }
+
+            this.addVacantObj.currentVacant = "";
 
         },
         removeVacant(index){ 
@@ -354,6 +502,7 @@ export default {
             this.currentVacantIndex = "";
             this.currentVacantSkill = "";
         },
+        //Vacant skill handlers
         addVacantSkill(vacantIndex, skill){
 
             //Check if valid
@@ -380,10 +529,10 @@ export default {
 
 
         },
-        editCompany(companyId){
+        editCompany1(companyId){
             
 
-            const cData = this.companyData[this.companyData.findIndex(e => e.id == companyId)];
+            const cData = this.companyDataSample[this.companyDataSample.findIndex(e => e.id == companyId)];
 
             this.companyName = cData.name;
             this.vacants = cData.vacantData;
@@ -391,7 +540,6 @@ export default {
 
         showSubrow(){
             this.isShowSubrow = !this.isShowSubrow;
-            //console.log(this.isShowSubrow)
         },
 
         parentWorm(el, tag){
@@ -406,7 +554,7 @@ export default {
             return null;
 
         },
-
+        
     },
     computed:{
 
@@ -426,7 +574,7 @@ export default {
 
             const cData = [];
 
-            this.companyData.forEach(e => {
+            this.companyDataSample.forEach(e => {
 
                 e.vacantData.forEach(vInfo => {
 
@@ -442,59 +590,32 @@ export default {
 
         
 
-    }
-
+    },  
+    watch: {
+        
+        filterBy(){
+            this.filterText = "";
+            this.filterCompanies();
+        }
+    },
+    mounted() {
+        this.getCompanies();
+        this.getCampus();
+        this.setCareers();
+    },
 
 }
 </script>
 
 <style scoped>
 
-    .bempNav{
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-top-right-radius: inherit;
-        border-top-left-radius: inherit;
-        background-color: var(--color60);
-        overflow: hidden;
+
+    .selectedRow{
+        background-color: var(--color60) !important;
     }
-    .bempNavItems{
-        display: flex;
+    .selectedRow td{
+        color: white !important;
     }
-    .bempNavItems span{
-        font-size: 18px;
-        color: white;
-        cursor: pointer;
-        transition: ease 0.3s;
-        padding: 5px;
-
-    }
-    .bempNavItems span:hover, .bempNavItems span:active{
-        background-color: var(--color60Hover);
-    }
-
-    .utesaForm{
-        position: relative;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     @media only screen and (max-width: 768px) {
@@ -510,15 +631,38 @@ export default {
 
 
 
+    .utesaForm{
+        position: relative;
+    }
 
 
+    @media only screen and (max-width: 576px) {
+        
+        .utesaForm .companyInfo .row div{
+            margin-bottom: 10px;
+        }
+
+        .utesaForm .companyInfo > .row{
+            margin-bottom: 0;
+        }
+
+
+
+    }
+
+    .blockBtn{
+        margin: 10px;
+        width: 80%;
+    }
 
 
     .tableContainer{
-        max-height: 250px;
+        min-height: 250px;
+        max-height: 230px;
         overflow: auto ;
         padding: 0;
     }
+
 
     tbody tr{
         cursor: pointer;
@@ -527,6 +671,7 @@ export default {
     th{
         position: sticky; top: 0;
         background: white;
+        min-width: 120px;
     }
 
 

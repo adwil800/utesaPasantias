@@ -46,6 +46,7 @@ export default {
     .modalBody{
         max-height: calc(100vh - 345px);
         overflow: auto;
+        padding: 5px;
     }
     .modalContainer{
         position: absolute;

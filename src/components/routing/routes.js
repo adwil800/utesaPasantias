@@ -10,7 +10,7 @@ import homePasantia from "@/views/general/homePasantia";
 //Admin
 import bolsaEmpAdmin from "@/views/admin/bolsaEmpAdmin";
 import solicitudAdmin from "@/views/admin/solicitudAdmin";
-import skillManager from "@/views/admin/maintenances/skillManager";
+import bolsaEmpleos from "@/views/admin/maintenances/bolsaEmpleos";
 
 import { useAxiosStore} from "../../stores/userStore";
 
@@ -83,7 +83,7 @@ const routes = [
     { path: '/admin/solicitud', name: "solicitudAdmin", component: solicitudAdmin,
       beforeEnter: [isAdmin],
     },
-    { path: '/admin/habilidades', name: "skillManager", component: skillManager,
+    { path: '/admin/mant/bolsaempleos', name: "mantBolsaEmpleos", component: bolsaEmpleos,
       beforeEnter: [isAdmin],
     },
     

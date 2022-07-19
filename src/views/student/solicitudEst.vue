@@ -14,7 +14,7 @@
             </div>
 
             <!--Comp body-->
-            <div class="horizontalForm">
+            <div>
                 
                 <!--Form solicitud-->
                 <div class="utesaForm" v-if="currentStage === 1">
@@ -369,7 +369,7 @@ export default {
         },
         async loadSkills(){
              //Get career skills
-                this.availableSkills = await this.axiosStore.axiosGet("/bemp/careerskills", {careerId: this.studentInformation.idcarrera});
+                this.availableSkills = await this.axiosStore.axiosGet("/maintenances/careerskills", {careerId: this.studentInformation.idcarrera});
                 if(!this.availableSkills.success){
                     this.availableSkills = []
                 }

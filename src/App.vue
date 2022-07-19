@@ -44,6 +44,8 @@ export default {
   :root{
     --color60: #009788;
     --color60Hover: #037d71;
+    --colorWarning: #ffc107;
+    --colorWarning: #ffc171;
     --sidebarBg: #222D32;
     --sidebarActiveLink: #0D1214;
     --htmlBg: #E5E5E5;
@@ -52,7 +54,7 @@ export default {
   }
 
   .red{
-    background-color: lightcoral;
+    background-color: lightcoral !important;
   }
 
   .blue{
@@ -93,7 +95,12 @@ export default {
   .bold{
       font-weight: bold !important;
   }
-
+  .pointer{
+    cursor: pointer;
+  }
+  .hoverable:hover{
+    filter: brightness(80%);
+  }
   .Ubtn{
     display: inline-block;
     font-weight: 400;
@@ -102,7 +109,6 @@ export default {
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
-    cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
@@ -115,6 +121,7 @@ export default {
   }
 
   .utesaBtn{
+    cursor: pointer;
     background-color: var(--color60);
     color: white;
   }
@@ -124,6 +131,33 @@ export default {
   }
   .utesaBtn:focus{
     box-shadow:  0px 0px 5px var(--color60);
+  }
+
+  .utesaDanger{
+    cursor: pointer;
+    background-color: lightcoral !important;
+    border: lightcoral !important;
+    color: white;
+  }
+  .utesaDanger:hover{
+    filter: brightness(85%);
+  }
+  .utesaDanger:focus{
+    box-shadow:  0px 0px 5px var(--color60);
+  }
+
+  
+  .utesaWarning{
+    cursor: pointer;
+    background-color: var(--colorWarning) !important;
+    color: white !important;
+  }
+  .utesaWarning:hover{
+    color: white;
+    background-color: var(--colorWarningHover);
+  }
+  .utesaWarning:focus{
+    box-shadow:  0px 0px 5px var(--colorWarning);
   }
 
   .flexSelfCenter{
