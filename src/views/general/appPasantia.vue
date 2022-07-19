@@ -11,8 +11,8 @@
 
 <script>
 
-import sidebarMenu from "@/components/general/routing/sidebarMenu.vue"
-import navbarPasantia from "@/components/general/utilities/navbarPasantia.vue"
+import sidebarMenu from "@/components/routing/sidebarMenu.vue"
+import navbarPasantia from "@/components/utilities/navbarPasantia.vue"
 import windowResize from "@/mixins/windowResize";
 import { useAxiosStore, useUserStore } from "@/stores/userStore";
 

@@ -258,7 +258,7 @@
 
 <script> 
     
-    import modalPasantia from "@/components/general/utilities/modalPasantia.vue";
+    import modalPasantia from "@/components/utilities/modalPasantia.vue";
     import modalHandler from "@/mixins/modalHandler";
     
 

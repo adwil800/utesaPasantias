@@ -77,7 +77,7 @@
                                         
                                         <button class="Ubtn utesaBtn inputGroupAddon noLeftRadius" 
                                         @click="addVacantSkill(currentVacantIndex, currentVacantSkill)">Agregar</button>
-                                    </div>
+                                    </div IM HERE WORKING ON ADMIN BEEMP, CRUD ON VACANTS AND COMPANIES, ADD ADDRESSES AND STUFF>
                                         
 
                                     <ul class="UList mt-3">
@@ -117,34 +117,6 @@
                                             <td>{{cData.vacantData.length}}</td>
                                             <td>- - -</td>
                                         </tr>
-                                      <!-- 
-                                        
-                                    <thead>
-                                        <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Empresa</th>
-                                        <th scope="col">Vacantes</th>
-                                        <th scope="col">Cantidad</th>
-                                        <th scope="col">Estado</th>
-                                        <th scope="col">Creado</th>
-                                        </tr>
-                                    </thead>
-                                        
-                                        
-                                        
-                                         <tr v-for="cData, index in simplifiedCData" :key="index" @click="editCompany(cData.cId)"a>
-                                            <td>{{index+1}}</td>
-                                            <td>{{cData.cName}}</td>
-                                            <td>{{cData.vName}}</td>
-                                            <td>1/1</td>
-                                            <td>{{cData.vStatus}}</td>
-                                            <td>- - -</td>
-                                        </tr>
-                            Company information-->
-                                                
-
-
-
                                     </tbody>
                                     </table>
                             </div>

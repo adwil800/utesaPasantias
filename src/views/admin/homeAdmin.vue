@@ -1,8 +1,35 @@
  <template>
         
-<h1>
-    HOME ADMIN
-</h1>
+    <div class="container-fluid" >
+        <div class="row">
+            
+            <!--Comp header-->
+            <div class="compHeader">
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>Dashboard</span>
+
+            </div>
+
+            <!--Comp body-->
+            <div class="">
+                
+                <!--Info general-->
+                <div class="utesaForm">
+
+                    <div class="formHeader ">
+                        <span>Pasantías pendientes and stuff</span>
+                    </div>
+
+                </div>
+
+            </div>
+                
+
+        </div>
+
+    </div>
 
 </template>
 

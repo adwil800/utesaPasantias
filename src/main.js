@@ -3,6 +3,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 //Mixins
 import IGShading from './mixins/IGShading';
+import errorHandlerMixin from './mixins/errorHandlerMixin';
 
 import App from './App.vue'
 import router from "./components/routing/routes";
@@ -25,6 +26,7 @@ const app = createApp(App);
       app.use(router);
       app.use(VueAxios, axios);
       app.mixin(IGShading);
+      app.mixin(errorHandlerMixin);
       app.mount('#app');
 
 //Navigation guards

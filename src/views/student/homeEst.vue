@@ -64,16 +64,21 @@
 
                             <div class="req">
 
-                                <div class="reqIcon pendingReq">
+                                <div class="reqIcon pendingReq" v-if="!isReceiptNumber">
                                     <i class="fa-solid fa-circle-xmark"></i>
                                     <i class="reqMoreInfo fa-solid fa-circle-exclamation" @click="openModal('reqPagoPas')"></i>
                                 </div>
                                 
+                                <div class="reqIcon completedReq" v-else-if="isReceiptNumber">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+
                                 <div class="reqInfo">
                                     <span class="bold">PAGO DERECHO A PASANTIA</span>
 
                                     <div class="reqStatus">
-                                        Pendiente
+                                        <div v-if="!isReceiptNumber">Pendiente</div>
+                                        <div v-else-if="isReceiptNumber">Completado</div>
                                     </div>
                                 </div>
 
@@ -101,7 +106,7 @@
 
                         <p v-if="isReqBemp">
                             Tu solicitud está siendo procesada por nuestro equipo. <br>
-                            Ten en cuenta que has aplicado a la <a href="#" @click="openModal('whatsBemp')">bolsa de empleos</a>, se te notificará
+                            Ten en cuenta que has aplicado a la <a href="#" @click.prevent="openModal('whatsBemp')">bolsa de empleos</a>, se te notificará
                             una vez hayamos encontrado una empresa compatible con tus habilidades.
                         </p>
 
@@ -115,10 +120,10 @@
 
                     <!--Skills based - eval-->
 
-    
                         <div class="row" v-if="isReqBemp">
-                            <div class="col-md-6 mb-3">
-
+                            <span>Aún puedes editar tus habilidades para incrementar tus probabilidades de encontrar una empresa</span>
+                            <div class="col-md-6 mb-3 mt-3">
+                                
                                 <div class="inputGroup">
                                     <select class="noRightRadius" v-model="currentSkill"
                                     @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
@@ -183,8 +188,10 @@
 
             <div v-else-if="currentModalData === 'whatsBemp'">
 
-                 <p>Es un sistema de emparejamiento donde se busca asignar
-                            empresas a nuestros pasantes de acuerdo a su área de desempeño.</p>
+                <p>Es un sistema de emparejamiento donde se busca asignar
+                        empresas a nuestros pasantes de acuerdo a su área de desempeño.</p>
+                    <br>
+                <button class="Ubtn utesaBtn" @click="removeStudentBemp"> Retirar bolsa de empleos </button>
             </div>
                 
         </template>
@@ -193,20 +200,26 @@
     </Transition>
 
 
+    <Transition name="bounce">
+        <errorHandler v-if="showError" @removeError="toggleShowNotification" :isError="isMsgNotification" :message="errorMessage"/>
+    </Transition>
 
 </template>
 
 <script>
 
-    import modalPasantia from "@/components/general/utilities/modalPasantia.vue"
+    import modalPasantia from "@/components/utilities/modalPasantia";
 
     import modalHandler from "@/mixins/modalHandler";
+    import errorHandler from "@/components/utilities/errorHandler";
+
 
     import { useAxiosStore, useUserStore } from "@/stores/userStore";
 export default {
     name: "homePasantia",
     components:{
-        modalPasantia
+        modalPasantia,
+        errorHandler
     },
     mixins: [modalHandler],
     data(){
@@ -215,7 +228,7 @@ export default {
             userStore: useUserStore(),
             isReqInProcess: "",
             isReqBemp: false,
-
+            isReceiptNumber: false,
             
             //student skills
             studentSkills: [],
@@ -225,25 +238,31 @@ export default {
         }
     },
     methods: {
-        
         async requestStatus(){
         //Request information
         const reqData = await this.axiosStore.axiosGet("/pasantia/requeststatus", {studentId: this.userStore.$state.userData.idusuario});
         if(reqData.success){
+            
             if(reqData.data.status === "pending"){
                 this.isReqInProcess = true;
+            }
+            else if(reqData.data.status !== "pending"){
+                this.isReqInProcess = false;
             }
             if(reqData.data.bemp){
                 this.isReqBemp = true;
             }
-        }
-    },
+            if(reqData.data.numrecibo !== "" && reqData.data.numrecibo !== null){
+                this.isReceiptNumber = true;
+            }
 
-          
+        }else if(reqData.noReq === true) this.isReqInProcess = false;
+
+        },
         async loadStudentData(){
 
             //General student information
-            const studentCareer = await this.axiosStore.axiosGet("/student/career", {studentId: this.userStore.$state.userData.idusuario});
+            const studentCareer = await this.axiosStore.axiosGet("/maintenances/studentcareer", {studentId: this.userStore.$state.userData.idusuario});
             if(!studentCareer.success){
                 this.toggleShowNotification("Error del servidor");
                 return;
@@ -261,6 +280,56 @@ export default {
                 this.studentSkills = []
             }
 
+        },
+        async addSkill(){
+            //Check if valid
+            if(this.currentSkill.toString().trim().length < 1){
+                this.toggleShowNotification("Seleccione un elemento valido")
+                return;
+            } 
+            //Check if exists
+            const exists = await this.axiosStore.axiosGet("/bemp/studentskill", {skillId: this.currentSkill, studentId: this.userStore.$state.userData.idusuario});
+            if(exists.success){
+                this.toggleShowNotification("Ya posees esta habilidad")
+                return;
+            }
+            //Add
+            const added = await this.axiosStore.axiosPost("/bemp/studentskill", {skillId: this.currentSkill, studentId: this.userStore.$state.userData.idusuario});
+            if(!added.success){
+                this.toggleShowNotification(added.data)
+            }
+            this.currentSkill = "";
+            this.loadStudentData();
+        },
+        async removeSkill(skill){
+            
+            //At least one skill must be left since student applied to BEMP
+            const studentSkills = await this.axiosStore.axiosGet("/bemp/studentskills", {studentId: this.userStore.$state.userData.idusuario});
+            console.log(studentSkills.data.length, studentSkills.data)
+            if(studentSkills.data.length === 1){
+                this.toggleShowNotification("Debes tener al menos una habilidad");
+                return;
+            }
+
+            const deleted = await this.axiosStore.axiosDelete("/bemp/studentskill", {skillId: skill, studentId: this.userStore.$state.userData.idusuario});
+            if(!deleted.success){
+                this.toggleShowNotification("No posees esta habilidad")
+                return;
+            }
+
+            this.loadStudentData();
+        },
+        async removeStudentBemp(){
+
+            const updated = await this.axiosStore.axiosPut("/pasantia/removebemp", {isBemp: false, studentId: this.userStore.$state.userData.idusuario})
+            console.log(updated)
+            if(!updated.success){
+                this.toggleShowNotification(updated.data)
+                return;
+            }
+
+            this.$router.go();
+            
         },
     },
     mounted(){
@@ -300,34 +369,6 @@ export default {
 
 
 
-
-
-
-    .skillSet{
-        list-style-type: none;
-        padding: 0;
-    }
-
-    .skillSet li{
-        padding: 5px;
-        border-radius: 10px;
-        background-color: var(--htmlBg);        
-        max-width: fit-content;
-        margin: 3px;
-        font-weight: 500;
-        display: inline-block;
-        position: relative;
-        transition: ease 0.3s;
-        cursor: pointer;
-
-        user-select: none;
-        -moz-user-select: none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-    }
-    .skillSet li:hover, .skillSet li:active{ /**Handle dbl click to remove skill */
-        background-color: var(--htmlBgHover);
-    } 
 
 
 

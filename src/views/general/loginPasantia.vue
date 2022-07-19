@@ -13,62 +13,85 @@
 
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-hotel"></i>
-                <select class="noLeftRadius" v-model="campusId" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <select class="noLeftRadius" v-model="userData.campusId" name="campusId" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
                     <option value="" disabled selected>Selecciona tu recinto</option>
-                    <option value="2">Santiago</option>
+                    <option v-for="campus in campuses" :key="campus.idrecinto" :value="campus.idrecinto">{{campus.nombre}}</option>
                 </select>
             </div>
 
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-user"></i>
-                <input type="text"  class="noLeftRadius" v-model="username" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <input type="text"  class="noLeftRadius" v-model="userData.username" name="username" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
             </div>
 
             <div class="inputGroup ">
                 <i class="inputGroupAddon noRightRadius fa-solid fa-lock"></i>
-                <input type="text"  class="noLeftRadius" v-model="psw" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
+                <input type="password"  class="noLeftRadius" v-model="userData.psw" name="psw" @focus="inputGroupShading" @blur="inputGroupShading($event, false)">
             </div>
 
             <button class="Ubtn utesaBtn align-self-center" @click="login">ENTRAR</button>
 
         </div>
 
-
+    <Transition name="bounce">
+        <errorHandler v-if="showError" @removeError="toggleShowNotification" :isLogin = "true" :message="errorMessage"/>
+    </Transition>
 
 </template> 
 
 <script>
 
-import {useUserStore, useSessionStore, useAxiosStore} from "@/stores/userStore";
+        import errorHandler from "@/components/utilities/errorHandler";
+        import {useUserStore, useSessionStore, useAxiosStore} from "@/stores/userStore";
+
 export default {
     name: "loginPasantia",
     components:{
-
+        errorHandler
     },
     data(){
         return{
             userStore: useUserStore(),
             sessionStore: useSessionStore(),
             axiosStore: useAxiosStore(),
-            username: "1161609",
-            psw: "1161609",
-            campusId: "2",
+
+            userData: {
+                campusId: "2",
+                username: "1123342",
+                psw: "1123342",
+            },
+
+            campuses: [],
+            
         }
     },
     methods:{
+
         async login(){
 
 
-            if(this.username.toString().trim().length < 1 || this.psw.toString().trim().length < 1 || this.campusId.toString().trim().length < 1) return;
+            for (const key in this.userData) {
+                if(this.userData[key].toString().trim().length < 1){
+                    //Find element and focus
+                    const input = document.querySelector(`[name="${key}"]`);
+                        console.log(input)
+                          input.focus();
+                    return;
+                }
+
+            }
+
             
-            const body = {username: this.username, psw: this.psw, campusId: this.campusId};
+            const body = {username: this.userData.username, psw: this.userData.psw, campusId: this.userData.campusId};
             
             const res = await this.axiosStore.axiosPost("auth/login", body);
 
             this.sessionStore.$state.sessionStatus = "";
             if(!res.success){
                 //Error message
-                alert(res.data)
+                this.toggleShowNotification(res.data);
+                const input = document.querySelector(`[name="username"]`);
+                      input.focus();
               
             }else{
                 //console.log("Welcome "+res.data.data)
@@ -79,9 +102,32 @@ export default {
 
 
         },
+        async getCampus(){
+            const campuses = await this.axiosStore.axiosGet("/auth/getcampus");
+            if(!campuses.success){
+                this.toggleShowNotification("Error del servidor");
+                return;
+            }
+                this.campuses = campuses.data;
+
+        },
+        handleKeyup(e){
+            e.preventDefault();
+            if (13 == e.keyCode) {
+                this.login();
+            }
+        }
       
 
     },
+    mounted() {
+        this.getCampus();
+         document.addEventListener('keyup', this.handleKeyup)
+    },
+    unmounted() {
+         document.removeEventListener('keyup', this.handleKeyup)
+    },
+
 
 }
 

@@ -10,7 +10,7 @@ import homePasantia from "@/views/general/homePasantia";
 //Admin
 import bolsaEmpAdmin from "@/views/admin/bolsaEmpAdmin";
 import solicitudAdmin from "@/views/admin/solicitudAdmin";
-
+import skillManager from "@/views/admin/maintenances/skillManager";
 
 import { useAxiosStore} from "../../stores/userStore";
 
@@ -34,12 +34,15 @@ const isUser = async () => {
 
   const axiosStore = useAxiosStore();
   const me = await axiosStore.axiosGet("/auth/getme");
-  const userLevel = me.data.tipo;
+  
+  if(me.data.tipo){
+    const userLevel = me.data.tipo || "";
 
-  if(userLevel === "user"){
-    return true;
-  }else{
-    return "/my";
+    if(userLevel === "user"){
+      return true;
+    }else{
+      return "/my";
+    }
   }
 
 };
@@ -48,12 +51,16 @@ const isAdmin = async () => {
 
   const axiosStore = useAxiosStore();
   const me = await axiosStore.axiosGet("/auth/getme");
-  const userLevel = me.data.tipo;
+  if(me.data.tipo){
 
-  if(userLevel === "admin"){
-    return true;
-  }else{
-    return "/my";
+    const userLevel = me.data.tipo || "";
+
+    if(userLevel === "admin"){
+      return true;
+    }else{
+      return "/my";
+    }
+    
   }
 
 };
@@ -76,7 +83,10 @@ const routes = [
     { path: '/admin/solicitud', name: "solicitudAdmin", component: solicitudAdmin,
       beforeEnter: [isAdmin],
     },
-   
+    { path: '/admin/habilidades', name: "skillManager", component: skillManager,
+      beforeEnter: [isAdmin],
+    },
+    
   ];
 
 

@@ -26,6 +26,17 @@
           icon: 'fa fa-key',
           hidden: user,
         },
+        {
+            title: 'Mantenimientos',
+            icon: 'fa fa-chart-area',
+            hidden: user,
+            child: [
+              {
+                href: '/admin/habilidades',
+                title: 'Habilidades bolsa de empleos'
+              }
+            ]
+        },
       ]" 
     :showOneChild="true"  
     :width="'245px'" 

@@ -30,7 +30,6 @@ export default {
   created(){
 
     this.userStore.setLoggedUser();
-
   }
 
 }
@@ -64,6 +63,7 @@ export default {
     margin: 0;
     padding: 0;
     background-color:var(--htmlBg);
+    overflow-x: hidden;
   }
   
   span, label {
@@ -82,7 +82,7 @@ export default {
   }
 
 
-  input[type="text"], select{
+  input[type="text"], select, input[type="password"]{
     width: 100%;
     border-radius: 3px;
     border: solid 1.3px gray; 
@@ -261,4 +261,29 @@ a:hover, a:active{
 }
 
 
+    .skillSet{
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .skillSet li{
+        padding: 5px;
+        border-radius: 10px;
+        background-color: var(--htmlBg);        
+        max-width: fit-content;
+        margin: 3px;
+        font-weight: 500;
+        display: inline-block;
+        position: relative;
+        transition: ease 0.3s;
+        cursor: pointer;
+
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+    }
+    .skillSet li:hover, .skillSet li:active{ /**Handle dbl click to remove skill */
+        background-color: var(--htmlBgHover);
+    } 
 </style>
